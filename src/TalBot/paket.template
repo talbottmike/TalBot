@@ -1,0 +1,23 @@
+type project
+owners
+    Mike Talbott
+authors 
+    Mike Talbott
+projectUrl
+    http://github.com/talbottmike/TalBot
+iconUrl
+    https://raw.githubusercontent.com/talbottmike/TalBot/master/docs/files/img/logo.png
+licenseUrl
+    http://github.com/talbottmike/TalBot/blob/master/LICENSE.txt
+requireLicenseAcceptance
+    false
+copyright
+    Copyright 2015
+tags
+    Slack bot FSharp F#
+summary
+    A bot for posting status messages to Slack and responding to Slack posts.
+description
+    A bot for posting status messages to Slack and responding to Slack posts.
+
+
