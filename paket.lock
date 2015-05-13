@@ -3,6 +3,8 @@ NUGET
   specs:
     FAKE (3.31.2)
     FSharp.Compiler.Service (0.0.89)
+    FSharp.Data (2.2.2)
+      Zlib.Portable (>= 1.10.0) - framework: portable-net40+sl50+wp80+win80
     FSharp.Formatting (2.9.6)
       FSharp.Compiler.Service (>= 0.0.87)
       FSharpVSPowerTools.Core (1.8.0)
@@ -14,11 +16,14 @@ NUGET
     Microsoft.Net.Http (2.2.29)
       Microsoft.Bcl (>= 1.1.10)
       Microsoft.Bcl.Build (>= 1.0.14)
+    Newtonsoft.Json (6.0.8)
+    NLog (3.2.1)
     NUnit (2.6.4)
     NUnit.Runners (2.6.4)
-    Octokit (0.11.0)
+    Octokit (0.11.0) - framework: portable-net40+sl50+wp80+win80
       Microsoft.Net.Http
     SourceLink.Fake (0.5.0)
+    Zlib.Portable (1.10.0) - framework: portable-net40+sl50+wp80+win80
 GITHUB
   remote: fsharp/FAKE
   specs:

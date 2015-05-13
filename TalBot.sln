@@ -1,6 +1,7 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.22823.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{63297B98-5CED-492C-A5B7-A5B4F73CF142}"
 	ProjectSection(SolutionItems) = preProject
 		paket.dependencies = paket.dependencies
@@ -34,6 +35,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{ED8079DD
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "TalBot.Tests", "tests\TalBot.Tests\TalBot.Tests.fsproj", "{49A4592E-4E7B-4C8B-B2D5-1E54330B280B}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Talbot.Agent", "Talbot.Agent\Talbot.Agent.fsproj", "{FCB95CD8-701D-4D79-AEC9-996A474A61B4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +51,10 @@ Global
 		{49A4592E-4E7B-4C8B-B2D5-1E54330B280B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49A4592E-4E7B-4C8B-B2D5-1E54330B280B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49A4592E-4E7B-4C8B-B2D5-1E54330B280B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCB95CD8-701D-4D79-AEC9-996A474A61B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCB95CD8-701D-4D79-AEC9-996A474A61B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCB95CD8-701D-4D79-AEC9-996A474A61B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCB95CD8-701D-4D79-AEC9-996A474A61B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
