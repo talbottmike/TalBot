@@ -53,6 +53,7 @@
     <Compile Include="ServiceHelper.fs" />
     <Compile Include="FolderMonitor.fs" />
     <Compile Include="Log.fs" />
+    <Compile Include="Plugins.fs" />
     <Compile Include="Bot.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />

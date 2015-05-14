@@ -6,8 +6,10 @@ open System.Threading
 open Newtonsoft.Json
 open ArgumentParser
 open TalBot
+open TalBot.IPlugin
 open TalBot.Types
 open FSharp.Data
+open FolderMonitor
 
 type Payload = {channel:string; username:string; text:string; icon_emoji:string}
 
@@ -38,7 +40,19 @@ type Bot(uri:string, debugOption:DebugOption) =
 
         while isRunning do
             try
-                let messages = FolderMonitor.changes () |> List.choose (fun x -> x)
+
+                let plugins = Plugins.load
+
+                let pluginResult (plugin:IPlugin) =
+                    plugin.Run() |> List.choose (fun x -> x) |> List.map (fun x -> Some(x))   
+
+                let pluginResults = 
+                    List.collect pluginResult plugins
+
+                let loadedPlugin = new FolderMonitorPlugin()
+                let plugin = loadedPlugin :> IPlugin
+                
+                let messages = plugin.Run() @ pluginResults |> List.choose (fun x -> x)
                 let log = Log.Read
                 let previousMessages = JsonConvert.DeserializeObject<StatusMessage list>(log())
                 
