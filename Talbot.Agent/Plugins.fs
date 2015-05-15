@@ -9,8 +9,7 @@ let directoryPath = AppDomain.CurrentDomain.BaseDirectory
 let pluginPath = directoryPath + "\\Plugins"
 let files = Directory.GetFiles(pluginPath,"*.dll") |> Seq.toList
 
-let filePlugins =
-    (fun file ->
+let getPlugins file =
         try
             let a = Assembly.LoadFrom(file)
             [ for t in a.GetTypes() do
@@ -21,7 +20,7 @@ let filePlugins =
         | _ ->
             // if we fail, we'll just skip this assembly.
             List.empty<IPlugin>
-        )
 
 let load =
-    List.collect filePlugins files
+    Directory.CreateDirectory(pluginPath) |> ignore
+    List.collect getPlugins files

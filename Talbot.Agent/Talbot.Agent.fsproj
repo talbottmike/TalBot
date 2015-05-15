@@ -8,11 +8,11 @@
     <ProjectGuid>fcb95cd8-701d-4d79-aec9-996a474a61b4</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Talbot.Agent</RootNamespace>
-    <AssemblyName>Talbot.Agent</AssemblyName>
+    <AssemblyName>TalBot.Agent</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
-    <Name>Talbot.Agent</Name>
+    <Name>TalBot.Agent</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,7 +51,6 @@
   <ItemGroup>
     <Compile Include="ArgumentParser.fs" />
     <Compile Include="ServiceHelper.fs" />
-    <Compile Include="FolderMonitor.fs" />
     <Compile Include="Log.fs" />
     <Compile Include="Plugins.fs" />
     <Compile Include="Bot.fs" />

@@ -9,7 +9,6 @@ open TalBot
 open TalBot.IPlugin
 open TalBot.Types
 open FSharp.Data
-open FolderMonitor
 
 type Payload = {channel:string; username:string; text:string; icon_emoji:string}
 
@@ -49,10 +48,7 @@ type Bot(uri:string, debugOption:DebugOption) =
                 let pluginResults = 
                     List.collect pluginResult plugins
 
-                let loadedPlugin = new FolderMonitorPlugin()
-                let plugin = loadedPlugin :> IPlugin
-                
-                let messages = plugin.Run() @ pluginResults |> List.choose (fun x -> x)
+                let messages = pluginResults |> List.choose (fun x -> x)
                 let log = Log.Read
                 let previousMessages = JsonConvert.DeserializeObject<StatusMessage list>(log())
                 
