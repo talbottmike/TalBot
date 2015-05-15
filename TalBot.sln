@@ -35,9 +35,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{ED8079DD
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "TalBot.Tests", "tests\TalBot.Tests\TalBot.Tests.fsproj", "{49A4592E-4E7B-4C8B-B2D5-1E54330B280B}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "TalBot.Agent", "Talbot.Agent\TalBot.Agent.fsproj", "{FCB95CD8-701D-4D79-AEC9-996A474A61B4}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "TalBot.Agent", "src\Talbot.Agent\TalBot.Agent.fsproj", "{FCB95CD8-701D-4D79-AEC9-996A474A61B4}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "TalBot.Plugins", "TalBot.Plugins\TalBot.Plugins.fsproj", "{5C5147C7-E4CA-4930-B54F-32A5D2614990}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "TalBot.Plugins", "src\TalBot.Plugins\TalBot.Plugins.fsproj", "{5C5147C7-E4CA-4930-B54F-32A5D2614990}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

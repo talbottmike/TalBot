@@ -44,10 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FolderMonitor.fs" />
-    <None Include="Script.fsx" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\TalBot\TalBot.fsproj">
+    <ProjectReference Include="..\TalBot\TalBot.fsproj">
       <Name>TalBot</Name>
       <Project>{d30544b1-70d8-4f7a-9f86-a403808ba39d}</Project>
       <Private>True</Private>
