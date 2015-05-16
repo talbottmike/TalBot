@@ -4,7 +4,7 @@ open System.IO
 open TalBot
 
 let directoryInfo () = new DirectoryInfo(@"C:\Test")
-let files () = directoryInfo () |> (fun x -> x.GetDirectories("??.??.??.??"))
+let files () = directoryInfo () |> (fun x -> x.GetDirectories(""))
 
 let changes () = 
     files ()

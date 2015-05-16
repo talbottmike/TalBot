@@ -1,8 +1,15 @@
-// Learn more about F# at http://fsharp.org. See the 'F# Tutorial' project
-// for more guidance on F# programming.
+type IPlug =
+   abstract member Run: unit -> string
+   
+type plug () =
+    interface IPlug with
+        member x.Run(): string = 
+            "foo"
 
-#load "Library.fs"
-open TalBot
+let p = new plug()
 
-let num = Library.hello 42
-printfn "%i" num
+let p1 = p :> IPlug
+let p2 = p :> obj
+let p3 = p2 :?> IPlug
+
+printfn "%s" (p3.Run ())

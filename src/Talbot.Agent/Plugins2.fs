@@ -1,4 +1,4 @@
-﻿module TalBot.Agent.Plugins
+﻿module TalBot.Agent.Plugins2
 
 open System
 open System.IO
@@ -17,19 +17,12 @@ let getPluginsFromFile file =
             [ for t in a.GetTypes() do
                 for i in t.GetInterfaces() do
                     if i.Name = "IPlugin" && i.Namespace = "TalBot" then
-                        let blah = a.CreateInstance(t.FullName)
-                        let b = System.Activator.CreateInstanceFrom(file, t.FullName).Unwrap()
-                        let d = 
-                            match blah with 
-                            | :? IPlugin -> printfn "%s" "true"
-                            | _ -> printfn "%s" "false"
-
+                        let b = System.Activator.CreateInstanceFrom(file, t.FullName).Unwrap() :?> IPlugin
                         yield a.CreateInstance(t.FullName) :?> IPlugin ]
         with
-        | exn ->
+        | _ ->
             // if we fail, we'll just skip this assembly.
-            raise exn
-            //List.empty<IPlugin>
+            List.empty<IPlugin>
 
 let load =
     Directory.CreateDirectory(pluginPath) |> ignore
