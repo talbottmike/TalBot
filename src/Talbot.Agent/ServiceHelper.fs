@@ -1,4 +1,4 @@
-﻿module ServiceHelper
+﻿module TalBot.Agent.ServiceHelper
 
 open System
 open System.ServiceProcess

@@ -1,14 +1,12 @@
-﻿namespace TalBot.Agent.Bot
+﻿namespace TalBot.Agent
 
 open System
 open System.Diagnostics
 open System.Threading
 open Newtonsoft.Json
 open ArgumentParser
-open TalBot
-open TalBot.IPlugin
-open TalBot.Types
 open FSharp.Data
+open TalBot
 
 type Payload = {channel:string; username:string; text:string; icon_emoji:string}
 
@@ -30,7 +28,8 @@ type Bot(uri:string, debugOption:DebugOption) =
         let folderMonitorPayload message = 
             match debugOption with
             | DebugOption.DebugMode -> {channel="@mtalbott"; username="StatusBot"; text=message; icon_emoji=":c3po:"}
-            | DebugOption.NonDebugMode -> {channel="#team"; username="StatusBot"; text=message; icon_emoji=":c3po:"}
+            // TODO revisit this. Making the same for both cases for now.
+            | DebugOption.NonDebugMode -> {channel="@mtalbott"; username="StatusBot"; text=message; icon_emoji=":c3po:"}
 
         // TODO fix incomplete pattern match
         let payload statusMessage =
@@ -39,7 +38,6 @@ type Bot(uri:string, debugOption:DebugOption) =
 
         while isRunning do
             try
-
                 let plugins = Plugins.load
 
                 let pluginResult (plugin:IPlugin) =

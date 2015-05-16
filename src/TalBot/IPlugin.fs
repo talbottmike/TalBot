@@ -1,6 +1,4 @@
-﻿namespace TalBot.IPlugin
-
-open TalBot.Types
+﻿namespace TalBot
 
 type IPlugin =
    abstract member Run: unit -> StatusMessage option list

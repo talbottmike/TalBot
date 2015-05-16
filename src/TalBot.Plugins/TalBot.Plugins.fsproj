@@ -43,7 +43,7 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FolderMonitor.fs" />
+    <Compile Include="Plugin.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TalBot\TalBot.fsproj">

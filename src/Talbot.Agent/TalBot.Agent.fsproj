@@ -25,6 +25,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DocumentationFile>bin\Debug\Talbot.Agent.XML</DocumentationFile>
     <Prefer32Bit>true</Prefer32Bit>
+    <StartArguments>-w https://hooks.slack.com/services/SomeValidValue -n InterfacingSlackBot -d</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -50,10 +51,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArgumentParser.fs" />
-    <Compile Include="ServiceHelper.fs" />
     <Compile Include="Log.fs" />
     <Compile Include="Plugins.fs" />
     <Compile Include="Bot.fs" />
+    <Compile Include="Service.fs" />
+    <Compile Include="ServiceHelper.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
     <None Include="paket.references" />

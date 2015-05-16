@@ -1,4 +1,4 @@
-﻿module ArgumentParser
+﻿module TalBot.Agent.ArgumentParser
 
 type ArgumentCommand = Run | RunService | ShowHelp | InstallService | UninstallService
 type DebugOption = DebugMode | NonDebugMode

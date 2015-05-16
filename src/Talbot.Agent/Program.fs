@@ -1,4 +1,6 @@
-﻿open ArgumentParser
+﻿module TalBot.Agent.Program
+
+open ArgumentParser
 open NLog.Config
 open NLog.Targets
 open NLog
@@ -71,34 +73,34 @@ let main argv =
         | DebugOption.NonDebugMode -> ()
         | DebugOption.DebugMode -> debugWait()
 
-//        let bot = new Bot(args.uri, args.debug)
-//        let service = new Service(bot)
-//
-//        let runService () = 
-//            ServiceBase.Run(service)
-//
-//        let run () = 
-//            service.debugOnStart ()
-//            Thread.Sleep(2000)
-//            
-//            let mutable running = true
-//            while (running && service.IsRunning) do
-//                match Console.KeyAvailable with
-//                | false -> Thread.Sleep(50)
-//                | true -> running <- false
-//
-//            service.debugOnStop ()
-//
-//        match args.command with
-//        | Run -> run ()
-//        | RunService -> runService ()
-//        | ShowHelp -> raise (new NotImplementedException("ShowHelp"))
-//        | InstallService -> 
-//            logger.Info("Installing service: " + args.serviceName)
-//            installService()
-//        | UninstallService ->
-//            logger.Info("Uninstalling service: " + args.serviceName)
-//            uninstallService()
+        let bot = new Bot(args.uri, args.debug)
+        let service = new Service(bot)
+
+        let runService () = 
+            ServiceBase.Run(service)
+
+        let run () = 
+            service.debugOnStart ()
+            Thread.Sleep(2000)
+            
+            let mutable running = true
+            while (running && service.IsRunning) do
+                match Console.KeyAvailable with
+                | false -> Thread.Sleep(50)
+                | true -> running <- false
+
+            service.debugOnStop ()
+
+        match args.command with
+        | Run -> run ()
+        | RunService -> runService ()
+        | ShowHelp -> raise (new NotImplementedException("ShowHelp"))
+        | InstallService -> 
+            logger.Info("Installing service: " + args.serviceName)
+            installService()
+        | UninstallService ->
+            logger.Info("Uninstalling service: " + args.serviceName)
+            uninstallService()
     with
         | x -> 
             logger.Fatal("Exception: " + x.Message, x)

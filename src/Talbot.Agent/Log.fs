@@ -1,4 +1,4 @@
-﻿module Log
+﻿module TalBot.Log
 
 open System.IO
 open System
