@@ -8,7 +8,8 @@ open TalBot
 let directoryPath = AppDomain.CurrentDomain.BaseDirectory
 // TODO changed path for testing.
 //let pluginPath = directoryPath + "\\Plugins"
-let pluginPath = @"C:\Workspaces\Personal\TalBot\src\TalBot.Plugins\bin\Debug\"
+//let pluginPath = @"C:\Workspaces\Personal\TalBot\src\TalBot.PluginsCSharp\bin\Debug\"
+let pluginPath = @"C:\Workspaces\Personal\TalBot\src\TalBot.PluginsFSharp\bin\Debug\"
 let files () = Directory.GetFiles(pluginPath,"*.dll") |> Seq.toList
 
 let getPluginsFromFile file =
@@ -18,18 +19,16 @@ let getPluginsFromFile file =
                 for i in t.GetInterfaces() do
                     if i.Name = "IPlugin" && i.Namespace = "TalBot" then
                         let blah = a.CreateInstance(t.FullName)
-                        let b = System.Activator.CreateInstanceFrom(file, t.FullName).Unwrap()
-                        let d = 
-                            match blah with 
-                            | :? IPlugin -> printfn "%s" "true"
-                            | _ -> printfn "%s" "false"
+                        match blah with 
+                        | :? IPlugin -> printfn "Valid plugin loaded %s" t.FullName
+                        | _ -> printfn "Invalid plugin %s" t.FullName
 
                         yield a.CreateInstance(t.FullName) :?> IPlugin ]
         with
         | exn ->
             // if we fail, we'll just skip this assembly.
-            raise exn
-            //List.empty<IPlugin>
+            printfn "Error loading assembly from file %s with exception %s" file exn.Message
+            List.empty<IPlugin>
 
 let load =
     Directory.CreateDirectory(pluginPath) |> ignore

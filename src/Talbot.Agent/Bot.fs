@@ -41,12 +41,12 @@ type Bot(uri:string, debugOption:DebugOption) =
                 let plugins = Plugins.load
 
                 let pluginResult (plugin:IPlugin) =
-                    plugin.Run() |> List.choose (fun x -> x) |> List.map (fun x -> Some(x))   
+                    plugin.Run() |> Seq.map (fun x -> Some(x))   
 
                 let pluginResults = 
-                    List.collect pluginResult plugins
+                    Seq.collect pluginResult plugins
 
-                let messages = pluginResults |> List.choose (fun x -> x)
+                let messages = pluginResults |> Seq.choose (fun x -> x) |> Seq.toList
                 let log = Log.Read
                 let previousMessages = JsonConvert.DeserializeObject<StatusMessage list>(log())
                 

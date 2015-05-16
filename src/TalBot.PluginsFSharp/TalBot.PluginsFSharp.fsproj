@@ -8,11 +8,11 @@
     <ProjectGuid>5c5147c7-e4ca-4930-b54f-32a5d2614990</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>TalBot.Plugins</RootNamespace>
-    <AssemblyName>TalBot.Plugins</AssemblyName>
+    <AssemblyName>TalBot.PluginsFSharp</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Name>TalBot.Plugins</Name>
+    <Name>TalBot.PluginsFSharp</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

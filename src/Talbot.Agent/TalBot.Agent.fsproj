@@ -53,7 +53,6 @@
     <Compile Include="ArgumentParser.fs" />
     <Compile Include="Log.fs" />
     <Compile Include="Plugins.fs" />
-    <Compile Include="Plugins2.fs" />
     <Compile Include="Bot.fs" />
     <Compile Include="Service.fs" />
     <Compile Include="ServiceHelper.fs" />

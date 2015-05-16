@@ -7,8 +7,8 @@
     <ProjectGuid>{F3690799-D6C7-46C2-B510-5E3495DF3BED}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TalBot.CSharpPlugins</RootNamespace>
-    <AssemblyName>TalBot.CSharpPlugins</AssemblyName>
+    <RootNamespace>TalBot.PluginsCSharp</RootNamespace>
+    <AssemblyName>TalBot.PluginsCSharp</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -41,11 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\TalBot\TalBot.fsproj">
+    <ProjectReference Include="..\TalBot\TalBot.fsproj">
       <Project>{d30544b1-70d8-4f7a-9f86-a403808ba39d}</Project>
       <Name>TalBot</Name>
     </ProjectReference>
