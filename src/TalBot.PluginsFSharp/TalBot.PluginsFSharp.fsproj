@@ -58,8 +58,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
     <ProjectReference Include="..\TalBot\TalBot.fsproj">
       <Name>TalBot</Name>
       <Project>{d30544b1-70d8-4f7a-9f86-a403808ba39d}</Project>

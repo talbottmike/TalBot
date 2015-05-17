@@ -41,6 +41,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "TalBot.PluginsFSharp", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TalBot.PluginsCSharp", "src\TalBot.PluginsCSharp\TalBot.PluginsCSharp.csproj", "{F3690799-D6C7-46C2-B510-5E3495DF3BED}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "TalBot.Web", "src\TalBot.Web\TalBot.Web.fsproj", "{F93815B1-7754-42A2-84CB-FC73536689D2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{F3690799-D6C7-46C2-B510-5E3495DF3BED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3690799-D6C7-46C2-B510-5E3495DF3BED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3690799-D6C7-46C2-B510-5E3495DF3BED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F93815B1-7754-42A2-84CB-FC73536689D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F93815B1-7754-42A2-84CB-FC73536689D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F93815B1-7754-42A2-84CB-FC73536689D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F93815B1-7754-42A2-84CB-FC73536689D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

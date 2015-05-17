@@ -1,4 +1,4 @@
-﻿module TalBot.Agent.PluginLoader
+﻿module TalBot.PluginLoader
 
 open System
 open System.IO
@@ -6,7 +6,7 @@ open System.Reflection
 open TalBot
 
 let directoryPath = AppDomain.CurrentDomain.BaseDirectory
-let pluginPath = directoryPath + "\\Plugins"
+let pluginPath = directoryPath + "Plugins"
 //let pluginPath = @"C:\Workspaces\Personal\TalBot\src\TalBot.PluginsCSharp\bin\Debug\"
 //let pluginPath = @"C:\Workspaces\Personal\TalBot\src\TalBot.PluginsFSharp\bin\Debug\"
 let files () = Directory.GetFiles(pluginPath,"*.dll") |> Seq.toList

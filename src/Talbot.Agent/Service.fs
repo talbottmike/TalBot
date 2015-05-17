@@ -3,24 +3,26 @@
 open System.ServiceProcess
 open System.Threading.Tasks
 open System
+open TalBot
 
-type public Service(bot:Bot) =
+type public Service(debugOption:DebugOption) =
     inherit ServiceBase(ServiceName = "TalBot")
+    let engine = new Engine(debugOption)
     let mutable serviceTask : Task = null
 
     member this.IsRunning 
-        with get() = bot.IsRunning
+        with get() = engine.IsRunning
 
     override x.OnStart(args:string[]) = 
         printfn "Starting the service."
-        serviceTask <- System.Threading.Tasks.Task.Run(fun _ -> bot.Run) 
+        serviceTask <- System.Threading.Tasks.Task.Run(fun _ -> engine.Run) 
         printfn "The service has started."
         base.OnStart(args)
 
     override x.OnStop() = 
         // Signal the thread to end.
         printfn "Stopping the service."
-        bot.Stop()
+        engine.Stop()
 
         // Wait one minute for the thread to end.
         match serviceTask.Wait(new TimeSpan(0, 1, 0)) with

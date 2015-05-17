@@ -9,6 +9,7 @@ open System.Threading
 open System.Diagnostics
 open System.ServiceProcess
 open ServiceHelper
+open TalBot
 
 let getLogger serviceName =
     // Configure logging
@@ -73,8 +74,7 @@ let main argv =
         | DebugOption.NonDebugMode -> ()
         | DebugOption.DebugMode -> debugWait()
 
-        let bot = new Bot(args.uri, args.debug)
-        let service = new Service(bot)
+        let service = new Service(args.debug)
 
         let runService () = 
             ServiceBase.Run(service)

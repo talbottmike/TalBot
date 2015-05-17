@@ -8,5 +8,13 @@ nuget FAKE
 nuget SourceLink.Fake
 nuget NLog
 nuget Newtonsoft.Json
+nuget FsWebAddRegistryEntries
+nuget Microsoft.AspNet.WebApi.Client
+nuget Microsoft.AspNet.WebApi.Core
+nuget Microsoft.AspNet.WebApi.Owin
+nuget Microsoft.Owin
+nuget Microsoft.Owin.Host.SystemWeb
+nuget MSBuild.Extension.Pack
+nuget Owin
 
 github fsharp/FAKE modules/Octokit/Octokit.fsx

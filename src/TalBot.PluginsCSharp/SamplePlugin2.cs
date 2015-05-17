@@ -4,10 +4,10 @@ namespace TalBot.CSharpPlugins
 {
     public class SamplePlugin2 : IPlugin
     {
-        public IEnumerable<Message> Run()
+        public IEnumerable<OutgoingMessage> Run()
         {
-            var message = new Message("SlackBot", "SamplePlugin1", "Hello from sample1.", "");
-            return new Message[] { message };
+            var message = new OutgoingMessage("SlackBot", "SamplePlugin2", "Hello from sample2.", "");
+            return new OutgoingMessage[] { message };
         }
     }
 }

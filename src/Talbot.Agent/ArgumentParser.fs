@@ -1,13 +1,13 @@
 ﻿module TalBot.Agent.ArgumentParser
 
+open TalBot
+
 type ArgumentCommand = Run | RunService | ShowHelp | InstallService | UninstallService
-type DebugOption = DebugMode | NonDebugMode
 
 // set up a type to represent the options
 type CommandLineOptions = {
     debug: DebugOption;
     serviceName: string;
-    uri: string;
     command: ArgumentCommand;
     directoryToUpgrade: string
     filteredArguments: string
@@ -18,9 +18,6 @@ let (|Prefix|_|) (p:string) (s:string) =
         Some <| s.[1..]
     else
         None
-
-let validOptions commandLineOptions =
-    commandLineOptions.uri.Length > 0 
         
 let rec parseCommandLineRec args optionsSoFar = 
     match args with 
@@ -44,19 +41,6 @@ let rec parseCommandLineRec args optionsSoFar =
             match xs with
             | h::xss -> 
                 let newOptionsSoFar = { optionsSoFar with serviceName=h; filteredArguments=sprintf "%s -n %s" optionsSoFar.filteredArguments h }
-                parseCommandLineRec xss newOptionsSoFar 
-
-            // unrecognized option set command to show help and keep looping
-            | _ -> 
-                let newOptionsSoFar = { optionsSoFar with command=ShowHelp}
-                parseCommandLineRec [] newOptionsSoFar 
-
-        // match uri by flag
-        | "w"::xs -> 
-            //start a submatch on the next arg
-            match xs with
-            | h::xss -> 
-                let newOptionsSoFar = { optionsSoFar with uri=h; filteredArguments=sprintf "%s -w %s" optionsSoFar.filteredArguments h  }
                 parseCommandLineRec xss newOptionsSoFar 
 
             // unrecognized option set command to show help and keep looping
@@ -103,7 +87,6 @@ let parseCommandLine args =
    let defaultOptions = {
         debug = NonDebugMode;
         serviceName = "TalBot"; 
-        uri = "";
         command = Run;
         directoryToUpgrade = "";
         filteredArguments = "";

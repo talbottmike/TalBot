@@ -5,6 +5,7 @@ open System.ServiceProcess
 open System.Configuration.Install
 open System.Collections
 open Microsoft.Win32
+open System.Diagnostics
 
 type installParameters = {assemblyPath:string; serviceName:string; displayName:string; description:string; startType:ServiceStartMode; userName:string; password:string; dependencies:string[] }
 let installService installParameters =
@@ -26,7 +27,8 @@ let installService installParameters =
             Parent=processServiceInstaller)
     installer.ServicesDependedOn <- installParameters.dependencies
     // TODO this should be the path of the running executable
-    installer.Context <- new InstallContext("",[|"assemblypath=C:\\Deployment\\TalBot\\TalBot.exe";|])
+    let appPath = Process.GetCurrentProcess().MainModule.FileName
+    installer.Context <- new InstallContext("",[|"assemblypath=" + appPath;|])
     
     let mutable state = new Hashtable();
 

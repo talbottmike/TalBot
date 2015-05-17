@@ -100,6 +100,7 @@ publish/
 
 # Publish Web Output
 *.Publish.xml
+*.pubxml
 
 # Enable nuget.exe in the .nuget folder (though normally executables are not tracked)
 !.nuget/NuGet.exe
@@ -122,6 +123,7 @@ ClientBin/
 *.[Pp]ublish.xml
 *.pfx
 *.publishsettings
+private.config
 
 # RIA/Silverlight projects
 Generated_Code/
@@ -186,3 +188,4 @@ paket-files
 .paket/paket.exe
 docs/content/license.md
 docs/content/release-notes.md
+
