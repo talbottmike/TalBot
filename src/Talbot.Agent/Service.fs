@@ -5,7 +5,7 @@ open System.Threading.Tasks
 open System
 
 type public Service(bot:Bot) =
-    inherit ServiceBase(ServiceName = "SlackBot")
+    inherit ServiceBase(ServiceName = "TalBot")
     let mutable serviceTask : Task = null
 
     member this.IsRunning 

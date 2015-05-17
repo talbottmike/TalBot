@@ -1,4 +1,4 @@
 ﻿namespace TalBot
 
-type StatusMessage = { source: string; message : string; }
-type StatusMessageOption = StatusMessage option
+type Message = { destination: string; sender: string; text : string; icon: string }
+type MessageOption = Message option

@@ -25,7 +25,8 @@ let installService installParameters =
             StartType=installParameters.startType,
             Parent=processServiceInstaller)
     installer.ServicesDependedOn <- installParameters.dependencies
-    installer.Context <- new InstallContext("",[|"assemblypath=C:\\Deployment\\SlackBot\\SlackBot.exe";|])
+    // TODO this should be the path of the running executable
+    installer.Context <- new InstallContext("",[|"assemblypath=C:\\Deployment\\TalBot\\TalBot.exe";|])
     
     let mutable state = new Hashtable();
 

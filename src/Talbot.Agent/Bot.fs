@@ -24,21 +24,29 @@ type Bot(uri:string, debugOption:DebugOption) =
         let postToSlack payload = 
             let content = JsonConvert.SerializeObject(payload)
             Http.RequestString(uri, body = TextRequest content) |> ignore
-              
-        let folderMonitorPayload message = 
-            match debugOption with
-            | DebugOption.DebugMode -> {channel="@mtalbott"; username="StatusBot"; text=message; icon_emoji=":c3po:"}
-            // TODO revisit this. Making the same for both cases for now.
-            | DebugOption.NonDebugMode -> {channel="@mtalbott"; username="StatusBot"; text=message; icon_emoji=":c3po:"}
 
-        // TODO fix incomplete pattern match
-        let payload statusMessage =
-            match statusMessage.source with
-            | "FolderMonitor" -> folderMonitorPayload statusMessage.message
+        let payload message =
+            let x = 
+                {
+                    channel=message.destination
+                    username=
+                        match message.sender with
+                        | "" | null -> "TalBot"
+                        | _ -> message.sender 
+                    text=message.text
+                    icon_emoji=
+                        match message.icon with
+                        | "" | null -> ":smile:"
+                        | _ -> message.icon
+                }
+            
+            match debugOption with
+            | DebugOption.DebugMode -> { x with channel="SlackBot"}
+            | DebugOption.NonDebugMode -> x
 
         while isRunning do
             try
-                let plugins = Plugins.load
+                let plugins = PluginLoader.load
 
                 let pluginResult (plugin:IPlugin) =
                     plugin.Run() |> Seq.map (fun x -> Some(x))   
@@ -47,8 +55,8 @@ type Bot(uri:string, debugOption:DebugOption) =
                     Seq.collect pluginResult plugins
 
                 let messages = pluginResults |> Seq.choose (fun x -> x) |> Seq.toList
-                let log = Log.Read
-                let previousMessages = JsonConvert.DeserializeObject<StatusMessage list>(log())
+                let messageLog = MessageLog.Read
+                let previousMessages = JsonConvert.DeserializeObject<Message list>(messageLog())
                 
                 // If there are no previous logs, we'll just log the existing messages instead of potentially double posting due to lost state.
                 match (box previousMessages = null) with
@@ -58,7 +66,7 @@ type Bot(uri:string, debugOption:DebugOption) =
                     difference () |> List.map payload  |> List.iter postToSlack
 
                 let serialized = JsonConvert.SerializeObject(messages)
-                Log.Save serialized
+                MessageLog.Save serialized
                 
                 let sleepInterval = new TimeSpan(0,5,0)
                 let watch = Stopwatch.StartNew()

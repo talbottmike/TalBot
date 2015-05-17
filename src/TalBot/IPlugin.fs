@@ -3,4 +3,4 @@
 open System.Collections.Generic
 
 type IPlugin =
-   abstract member Run: unit -> IEnumerable<StatusMessage>
+   abstract member Run: unit -> IEnumerable<Message>
