@@ -9,7 +9,17 @@ let directoryPath = AppDomain.CurrentDomain.BaseDirectory
 let pluginPath = directoryPath + "Plugins"
 //let pluginPath = @"C:\Workspaces\Personal\TalBot\src\TalBot.PluginsCSharp\bin\Debug\"
 //let pluginPath = @"C:\Workspaces\Personal\TalBot\src\TalBot.PluginsFSharp\bin\Debug\"
-let files () = Directory.GetFiles(pluginPath,"*.dll") |> Seq.toList
+let files path = 
+    let loadedAssemblies = 
+        AppDomain.CurrentDomain.GetAssemblies() 
+        |> Seq.map (fun x -> x.FullName.Split(',') |> Seq.head)
+    let foundAssemblyFiles = 
+        Directory.GetFiles(path,"*.dll") 
+    let nonLoadedAssemblyFiles =
+        foundAssemblyFiles
+        |> Seq.filter (fun x -> not (Seq.exists ((=) (Path.GetFileNameWithoutExtension(x))) loadedAssemblies)) 
+        |> Seq.toList
+    nonLoadedAssemblyFiles
 
 let getPluginsFromFile file =
         try
@@ -31,5 +41,5 @@ let getPluginsFromFile file =
 
 let load =
     Directory.CreateDirectory(pluginPath) |> ignore
-    let f = files ()
+    let f = files pluginPath
     List.collect getPluginsFromFile (f)

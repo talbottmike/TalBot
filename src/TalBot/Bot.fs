@@ -68,7 +68,7 @@ module Bot =
 
         let getMatches str = 
             let prefixes = ConfigurationManager.AppSettings.Item("TicketPrefixes").Split(',')
-            let matchString = prefixes |> Seq.map (fun x -> x + @"\d{3,}") |> Seq.reduce (fun x y -> x + "|" + y)
+            let matchString = prefixes |> Seq.map (fun x -> x + @"\d{1,}") |> Seq.reduce (fun x y -> x + "|" + y)
             regexMatches matchString str
 
         let makeLinks matches = 
