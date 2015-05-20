@@ -8,35 +8,43 @@ open TalBot
 module Bot =
     open System.Text.RegularExpressions
     open System
+    
+    let blankResponse = { Response.text = ""; username = ""; icon_emoji = "" }
+    
+    let serializeIncomingMessage incomingMessage = 
+            JsonConvert.SerializeObject(incomingMessage)
+
+    let postToSlack payload = 
+        let content = JsonConvert.SerializeObject(payload)
+        let uri = ConfigurationManager.AppSettings.Item("SlackUri")
+        match Uri.TryCreate(uri, UriKind.Absolute) with
+        | (true, x) -> Http.RequestString(x.AbsoluteUri.ToString(), body=TextRequest content) |> ignore
+        | (false, _) -> ()
+
+    let payload message debugOption =
+        let x = 
+            {
+                channel=message.destination
+                username=
+                    match message.sender with
+                    | "" | null -> "TalBot"
+                    | _ -> message.sender 
+                text=message.text
+                icon_emoji=
+                    match message.icon with
+                    | "" | null -> ":smile:"
+                    | _ -> message.icon
+            }
+            
+        match debugOption with
+        | DebugOption.DebugMode -> 
+            let debugChannel = ConfigurationManager.AppSettings.Item("DebugChannel")
+            { x with channel=debugChannel}
+        | DebugOption.NonDebugMode -> x
 
     let speak debugOption =
-        let postToSlack payload = 
-            let content = JsonConvert.SerializeObject(payload)
-            let uri = ConfigurationManager.AppSettings.Item("SlackUri")
-            match Uri.TryCreate(uri, UriKind.Absolute) with
-            | (true, x) -> Http.RequestString(x.AbsoluteUri.ToString(), body=TextRequest content) |> ignore
-            | (false, _) -> ()
-
         let payload message =
-            let x = 
-                {
-                    channel=message.destination
-                    username=
-                        match message.sender with
-                        | "" | null -> "TalBot"
-                        | _ -> message.sender 
-                    text=message.text
-                    icon_emoji=
-                        match message.icon with
-                        | "" | null -> ":smile:"
-                        | _ -> message.icon
-                }
-            
-            match debugOption with
-            | DebugOption.DebugMode -> 
-                let debugChannel = ConfigurationManager.AppSettings.Item("DebugChannel")
-                { x with channel=debugChannel}
-            | DebugOption.NonDebugMode -> x
+            payload message debugOption
 
         let plugins = PluginLoader.load
 
@@ -62,7 +70,7 @@ module Bot =
 
     let gossip (incomingMessage:IncomingMessage) =
         let regexMatches pattern input =
-           Regex.Matches(input,pattern) 
+           Regex.Matches(input,pattern,RegexOptions.IgnoreCase) 
            |> Seq.cast
            |> Seq.map (fun (regMatch:Match) -> regMatch.Value)
 
@@ -77,13 +85,19 @@ module Bot =
 
         let matches = getMatches incomingMessage.text
         match matches with
-        | x when Seq.isEmpty x -> { Response.text = ""; username = ""; icon_emoji = "" }
+        | x when Seq.isEmpty x -> 
+            let debugChannel = ConfigurationManager.AppSettings.Item("DebugChannel")
+            match debugChannel with
+            | "" | null -> ()
+            | _ ->
+                let txt = serializeIncomingMessage incomingMessage
+                payload {OutgoingMessage.destination=debugChannel; sender="TalBot"; text=txt; icon=":smile:";} DebugOption.DebugMode |> postToSlack
+            
+            { Response.text = "I can create links for tickets with the following prefixes. " + ConfigurationManager.AppSettings.Item("TicketPrefixes"); username = "TalBot"; icon_emoji = ":stuck_out_tongue_winking_eye:" }
         | x ->   
             {Response.text =  "@" + incomingMessage.userName + ": let me get a link to that for you.\n" + (makeLinks x); username = "TalBot"; icon_emoji = ":smile:" }
 
     let respond incomingMessage =
-
-        let blankResponse = { Response.text = ""; username = ""; icon_emoji = "" }
         let slackToken = ConfigurationManager.AppSettings.Item("SlackToken")
 
         match incomingMessage with
