@@ -180,7 +180,7 @@ Target "SourceLink" (fun _ ->
 Target "NuGet" (fun _ ->
     Paket.Pack(fun p -> 
         { p with
-            OutputPath = "bin"
+            OutputPath = "bin"            
             Version = release.NugetVersion
             ReleaseNotes = toLines release.Notes})
 )
@@ -309,6 +309,7 @@ Target "ReleaseDocs" (fun _ ->
     StageAll tempDocsDir
     Git.Commit.Commit tempDocsDir (sprintf "Update generated documentation for version %s" release.NugetVersion)
     Branches.push tempDocsDir
+    CleanDir tempDocsDir
 )
 
 #load "paket-files/fsharp/FAKE/modules/Octokit/Octokit.fsx"
