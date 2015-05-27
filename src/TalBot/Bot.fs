@@ -68,16 +68,15 @@ module Bot =
         let serialized = JsonConvert.SerializeObject(messages)
         MessageLog.Save serialized
 
-    let gossip (incomingMessage:IncomingMessage) =
-        let regexMatches pattern input =
-           Regex.Matches(input,pattern,RegexOptions.IgnoreCase) 
-           |> Seq.cast
-           |> Seq.map (fun (regMatch:Match) -> regMatch.Value)
+    let regexMatches pattern input =
+        Regex.Matches(input,pattern,RegexOptions.IgnoreCase) 
+        |> Seq.cast
+        |> Seq.map (fun (regMatch:Match) -> regMatch.Value)
 
+    let gossip (incomingMessage:IncomingMessage) =
         let getMatches str = 
-            let prefixes = ConfigurationManager.AppSettings.Item("TicketPrefixes").Split(',')
-            let matchString = prefixes |> Seq.map (fun x -> x + @"\d{1,}") |> Seq.reduce (fun x y -> x + "|" + y)
-            regexMatches matchString str
+            let regex = ConfigurationManager.AppSettings.Item("TicketRegex")
+            regexMatches regex str
 
         let makeLinks matches = 
             let uriPrefix = ConfigurationManager.AppSettings.Item("TicketUri")
@@ -93,7 +92,7 @@ module Bot =
                 let txt = serializeIncomingMessage incomingMessage
                 payload {OutgoingMessage.destination=debugChannel; sender="TalBot"; text=txt; icon=":smile:";} DebugOption.DebugMode |> postToSlack
             
-            { Response.text = "I can create links for tickets with the following prefixes. " + ConfigurationManager.AppSettings.Item("TicketPrefixes"); username = "TalBot"; icon_emoji = ":stuck_out_tongue_winking_eye:" }
+            { Response.text = "I can create links for tickets that match the following regex " + ConfigurationManager.AppSettings.Item("TicketRegex"); username = "TalBot"; icon_emoji = ":stuck_out_tongue_winking_eye:" }
         | x ->   
             {Response.text =  "@" + incomingMessage.userName + ": let me get a link to that for you.\n" + (makeLinks x); username = "TalBot"; icon_emoji = ":smile:" }
 
