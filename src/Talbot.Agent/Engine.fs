@@ -27,6 +27,7 @@ type Engine(debugOption:DebugOption) =
 
             with
             | exn -> 
+                Bot.attemptToLog exn
                 printf "Error: %s" exn.Message
                 let interval = new TimeSpan(0,5,0)
                 let watch = Stopwatch.StartNew()

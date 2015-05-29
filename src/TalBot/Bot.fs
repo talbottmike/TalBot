@@ -9,19 +9,20 @@ module Bot =
     open System.Text.RegularExpressions
     open System
     
-    let blankResponse = { Response.text = ""; username = ""; icon_emoji = "" }
+    let private blankResponse = { Response.text = ""; username = ""; icon_emoji = "" }
+    let private debugChannel = ConfigurationManager.AppSettings.Item("DebugChannel")
     
-    let serializeIncomingMessage incomingMessage = 
+    let private serializeIncomingMessage incomingMessage = 
             JsonConvert.SerializeObject(incomingMessage)
 
-    let postToSlack payload = 
+    let private postToSlack payload = 
         let content = JsonConvert.SerializeObject(payload)
         let uri = ConfigurationManager.AppSettings.Item("SlackUri")
         match Uri.TryCreate(uri, UriKind.Absolute) with
         | (true, x) -> Http.RequestString(x.AbsoluteUri.ToString(), body=TextRequest content) |> ignore
         | (false, _) -> ()
 
-    let payload message debugOption =
+    let private buildPayload message debugOption =
         let x = 
             {
                 channel=message.destination
@@ -38,13 +39,12 @@ module Bot =
             
         match debugOption with
         | DebugOption.DebugMode -> 
-            let debugChannel = ConfigurationManager.AppSettings.Item("DebugChannel")
             { x with channel=debugChannel}
         | DebugOption.NonDebugMode -> x
 
     let speak debugOption =
         let payload message =
-            payload message debugOption
+            buildPayload message debugOption
 
         let plugins = PluginLoader.load
 
@@ -90,7 +90,7 @@ module Bot =
             | "" | null -> ()
             | _ ->
                 let txt = serializeIncomingMessage incomingMessage
-                payload {OutgoingMessage.destination=debugChannel; sender="TalBot"; text=txt; icon=":smile:";} DebugOption.DebugMode |> postToSlack
+                buildPayload {OutgoingMessage.destination=debugChannel; sender="TalBot"; text=txt; icon=":smile:";} DebugOption.DebugMode |> postToSlack
             
             { Response.text = "I can create links for tickets that match the following regex " + ConfigurationManager.AppSettings.Item("TicketRegex"); username = "TalBot"; icon_emoji = ":stuck_out_tongue_winking_eye:" }
         | x ->   
@@ -107,3 +107,10 @@ module Bot =
         // Otherwise we'll come up with a response or talk about it behind your back by posting separately.
         | _ -> gossip incomingMessage
 
+    let attemptToLog (exn:exn) =
+        try
+            let message = {OutgoingMessage.destination=debugChannel; sender="TalBot"; text=exn.Message; icon=":open_mouth:";}
+            buildPayload message DebugOption.DebugMode |> postToSlack
+        with
+        | exn -> 
+            printf "Failed to log message: %s" exn.Message
