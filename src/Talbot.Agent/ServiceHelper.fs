@@ -26,7 +26,7 @@ let installService installParameters =
             StartType=installParameters.startType,
             Parent=processServiceInstaller)
     installer.ServicesDependedOn <- installParameters.dependencies
-    // TODO this should be the path of the running executable
+
     let appPath = Process.GetCurrentProcess().MainModule.FileName
     installer.Context <- new InstallContext("",[|"assemblypath=" + appPath;|])
     

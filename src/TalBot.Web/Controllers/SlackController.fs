@@ -20,10 +20,9 @@ Trigger_word : string;
 type SlackController() =
     inherit ApiController()
     [<Route("slack")>]
-    member this.Post(slackHook : SlackHook) =
-        
-        let incomingMessage =
-            {
+    member this.Post(slackHook : SlackHook) =        
+        let suspiciousIncomingMessage =
+            Some{
                 token = slackHook.Token
                 teamId = slackHook.Team_id
                 teamDomain = slackHook.Team_domain
@@ -35,5 +34,6 @@ type SlackController() =
                 text = slackHook.Text
                 triggerWord = slackHook.Trigger_word
             }
-        let response = Bot.respond incomingMessage
+
+        let response = Bot.respond suspiciousIncomingMessage
         this.Ok response

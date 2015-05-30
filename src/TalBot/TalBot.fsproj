@@ -59,6 +59,36 @@
   </Target>
   -->
   <Import Project="..\..\.paket\paket.targets" />
+  <ItemGroup>
+    <Content Include="app.config.install.xdt">
+      <Paket>True</Paket>
+    </Content>
+    <Content Include="web.config.install.xdt">
+      <Paket>True</Paket>
+    </Content>
+    <None Include="Script.fsx" />
+    <None Include="paket.references" />
+    <None Include="paket.template" />
+    <Compile Include="Types.fs" />
+    <Compile Include="Configuration.fs" />
+    <Compile Include="Interfaces.fs" />
+    <Compile Include="PluginLoader.fs" />
+    <Compile Include="MessageLog.fs" />
+    <Compile Include="BotHelper.fs" />
+    <Compile Include="Responses.fs" />
+    <Compile Include="Bot.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
+  </ItemGroup>
   <Choose>
     <When Condition="($(TargetFrameworkIdentifier) == '.NETCore') Or ($(TargetFrameworkIdentifier) == 'Silverlight' And $(TargetFrameworkVersion) == 'v5.0') Or ($(TargetFrameworkIdentifier) == 'WindowsPhone' And ($(TargetFrameworkVersion) == 'v8.0' Or $(TargetFrameworkVersion) == 'v8.1')) Or ($(TargetFrameworkProfile) == 'Profile5') Or ($(TargetFrameworkProfile) == 'Profile6') Or ($(TargetFrameworkProfile) == 'Profile7') Or ($(TargetFrameworkProfile) == 'Profile14') Or ($(TargetFrameworkProfile) == 'Profile19') Or ($(TargetFrameworkProfile) == 'Profile24') Or ($(TargetFrameworkProfile) == 'Profile31') Or ($(TargetFrameworkProfile) == 'Profile37') Or ($(TargetFrameworkProfile) == 'Profile42') Or ($(TargetFrameworkProfile) == 'Profile44') Or ($(TargetFrameworkProfile) == 'Profile47') Or ($(TargetFrameworkProfile) == 'Profile49') Or ($(TargetFrameworkProfile) == 'Profile78') Or ($(TargetFrameworkProfile) == 'Profile147') Or ($(TargetFrameworkProfile) == 'Profile158')">
       <ItemGroup>
@@ -180,31 +210,4 @@
       </ItemGroup>
     </When>
   </Choose>
-  <ItemGroup>
-    <Content Include="app.config.install.xdt">
-      <Paket>True</Paket>
-    </Content>
-    <Content Include="web.config.install.xdt">
-      <Paket>True</Paket>
-    </Content>
-    <None Include="Script.fsx" />
-    <None Include="paket.references" />
-    <None Include="paket.template" />
-    <Compile Include="Types.fs" />
-    <Compile Include="Interfaces.fs" />
-    <Compile Include="PluginLoader.fs" />
-    <Compile Include="MessageLog.fs" />
-    <Compile Include="Bot.fs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="mscorlib" />
-    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Runtime.Serialization" />
-  </ItemGroup>
 </Project>

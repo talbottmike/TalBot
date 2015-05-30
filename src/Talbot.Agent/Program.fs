@@ -70,11 +70,11 @@ let main argv =
             | true -> Console.ReadKey() |> ignore
             | false -> ()
 
-        match args.debug with
+        match TalBot.Configuration.inDebug with
         | DebugOption.NonDebugMode -> ()
         | DebugOption.DebugMode -> debugWait()
 
-        let service = new Service(args.debug)
+        let service = new Service()
 
         let runService () = 
             ServiceBase.Run(service)

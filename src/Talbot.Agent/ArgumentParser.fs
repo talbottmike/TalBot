@@ -6,7 +6,6 @@ type ArgumentCommand = Run | RunService | ShowHelp | InstallService | UninstallS
 
 // set up a type to represent the options
 type CommandLineOptions = {
-    debug: DebugOption;
     serviceName: string;
     command: ArgumentCommand;
     directoryToUpgrade: string
@@ -29,11 +28,6 @@ let rec parseCommandLineRec args optionsSoFar =
         match h1::t with
         // empty list means we're done.
         | [] -> optionsSoFar
-
-        // match debug flag
-        | "d"::xs -> 
-            let newOptionsSoFar = { optionsSoFar with debug=DebugMode}
-            parseCommandLineRec xs newOptionsSoFar 
 
         // match name by flag
         | "n"::xs -> 
@@ -85,7 +79,6 @@ let rec parseCommandLineRec args optionsSoFar =
 let parseCommandLine args = 
    // create the defaults
    let defaultOptions = {
-        debug = NonDebugMode;
         serviceName = "TalBot"; 
         command = Run;
         directoryToUpgrade = "";

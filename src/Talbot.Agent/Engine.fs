@@ -5,7 +5,7 @@ open System.Diagnostics
 open System.Threading
 open TalBot
 
-type Engine(debugOption:DebugOption) =
+type Engine() =
     let mutable isRunning = true
 
     member this.Stop() =
@@ -18,7 +18,7 @@ type Engine(debugOption:DebugOption) =
     member this.Run =
         while isRunning do
             try
-                Bot.speak debugOption
+                Bot.speak
                 
                 let sleepInterval = new TimeSpan(0,5,0)
                 let watch = Stopwatch.StartNew()

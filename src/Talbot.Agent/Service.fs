@@ -5,9 +5,9 @@ open System.Threading.Tasks
 open System
 open TalBot
 
-type public Service(debugOption:DebugOption) =
+type public Service() =
     inherit ServiceBase(ServiceName = "TalBot")
-    let engine = new Engine(debugOption)
+    let engine = new Engine()
     let mutable serviceTask : Task = null
 
     member this.IsRunning 
