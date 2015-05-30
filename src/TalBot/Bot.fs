@@ -4,6 +4,8 @@ open FSharp.Data
 open Newtonsoft.Json
 open System.Configuration
 open TalBot
+open Microsoft.Azure
+open Microsoft.ServiceBus.Messaging
 
 module Bot =
     open System.Text.RegularExpressions
@@ -73,7 +75,15 @@ module Bot =
         |> Seq.cast
         |> Seq.map (fun (regMatch:Match) -> regMatch.Value)
 
+    let private postToServiceQueue (incomingMessage:IncomingMessage) =
+        let serviceBusConnectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString")
+        let client = QueueClient.CreateFromConnectionString(serviceBusConnectionString, "queue")
+        let message = new BrokeredMessage(incomingMessage);
+        client.Send(message)
+
     let gossip (incomingMessage:IncomingMessage) =
+        postToServiceQueue incomingMessage
+
         let getMatches str = 
             let regex = ConfigurationManager.AppSettings.Item("TicketRegex")
             regexMatches regex str

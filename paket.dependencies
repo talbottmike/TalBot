@@ -16,5 +16,6 @@ nuget Microsoft.Owin
 nuget Microsoft.Owin.Host.SystemWeb
 nuget MSBuild.Extension.Pack
 nuget Owin
+nuget WindowsAzure.ServiceBus
 
 github fsharp/FAKE modules/Octokit/Octokit.fsx
