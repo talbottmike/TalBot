@@ -15,8 +15,13 @@ module Bot =
     
     // Responds directly to an incoming message and/or posts to queue for workers to process
     let gossip (incomingMessage:IncomingMessage) =
-        postToServiceQueue incomingMessage
-        ticketResponse incomingMessage
+        match useServiceBus with
+        | true -> 
+            postToServiceQueue incomingMessage
+            blankResponse
+        | false -> ticketResponse incomingMessage
+
+//        ticketResponse incomingMessage
 
     // Evaluates a suspicious incoming message and responds or passes it along with approval to process
     let respond suspectIncomingMessage =
@@ -38,3 +43,7 @@ module Bot =
         with
         | exn -> 
             printf "Failed to log message: %s" exn.Message
+
+    let slander =
+        printfn "checking for gossip"
+        readFromServiceQueue

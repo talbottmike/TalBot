@@ -82,9 +82,9 @@ let main argv =
         let run () = 
             service.debugOnStart ()
             Thread.Sleep(2000)
-            
+
             let mutable running = true
-            while (running && service.IsRunning) do
+            while (running) do
                 match Console.KeyAvailable with
                 | false -> Thread.Sleep(50)
                 | true -> running <- false

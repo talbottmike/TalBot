@@ -16,6 +16,6 @@ nuget NUnit
 nuget NUnit.Runners
 nuget Owin
 nuget SourceLink.Fake
-nuget WindowsAzure.ServiceBus
+nuget FSharp.CloudAgent
 
 github fsharp/FAKE modules/Octokit/Octokit.fsx
