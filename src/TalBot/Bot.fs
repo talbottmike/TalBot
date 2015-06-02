@@ -18,7 +18,8 @@ module Bot =
         match useServiceBus with
         | true -> 
             postToServiceQueue incomingMessage
-            blankResponse
+            ticketResponse incomingMessage
+            //blankResponse
         | false -> ticketResponse incomingMessage
 
 //        ticketResponse incomingMessage
@@ -44,6 +45,6 @@ module Bot =
         | exn -> 
             printf "Failed to log message: %s" exn.Message
 
-    let slander =
-        printfn "checking for gossip"
-        readFromServiceQueue
+    let slander () =
+        printfn "read from service queue"
+        readFromServiceQueue ()

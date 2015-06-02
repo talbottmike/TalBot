@@ -13,12 +13,6 @@ open FSharp.CloudAgent.Messaging
 // Serialize incoming message to Json
 let serializeIncomingMessage incomingMessage = JsonConvert.SerializeObject(incomingMessage)
 
-// ServiceBus helpers
-let serviceBusReadConnection = ServiceBusConnection serviceBusReadConnectionString
-let serviceBusWriteConnection = ServiceBusConnection serviceBusWriteConnectionString
-let cloudReadConnection = WorkerCloudConnection(serviceBusReadConnection, Queue "queue")
-let cloudWriteConnection = WorkerCloudConnection(serviceBusWriteConnection, Queue "queue")
-let sendToMessageQueue = ConnectionFactory.SendToWorkerPool cloudWriteConnection
 // A function which creates an Agent on demand.
 let createResilientAgent agentId =
     MailboxProcessor.Start(fun inbox ->
@@ -42,17 +36,17 @@ let createResilientAgent agentId =
 
 // Post incoming message to service bus queue
 let postToServiceQueue (incomingMessage:IncomingMessage) =
+    let serviceBusWriteConnection = ServiceBusConnection serviceBusWriteConnectionString
+    let cloudWriteConnection = WorkerCloudConnection(serviceBusWriteConnection, Queue "queue")
+    let sendToMessageQueue = ConnectionFactory.SendToWorkerPool cloudWriteConnection
     Async.RunSynchronously (sendToMessageQueue incomingMessage)
 
-//    let client = QueueClient.CreateFromConnectionString(serviceBusWriteConnectionString, "queue")
-//    let message = new BrokeredMessage(incomingMessage);
-//    client.Send(message)
-
-let readFromServiceQueue =
+let readFromServiceQueue () =
+    let serviceBusReadConnection () = ServiceBusConnection serviceBusReadConnectionString
+    let cloudReadConnection () = WorkerCloudConnection(serviceBusReadConnection (), Queue "queue")
     printfn "trying to read from the queue"
-    use blah = ConnectionFactory.StartListening(cloudReadConnection, createResilientAgent >> Messaging.CloudAgentKind.ResilientCloudAgent)
-    blah |> ignore
-    
+    let disposable = ConnectionFactory.StartListening(cloudReadConnection (), createResilientAgent >> Messaging.CloudAgentKind.ResilientCloudAgent)
+    disposable.Dispose()    
 
 // Post payload to slack
 let postToSlack payload = 

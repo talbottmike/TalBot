@@ -29,10 +29,8 @@ type public Service() =
         while true do
             try
                 printfn "Asking bot to check for gossip"
-                Bot.slander
+                Bot.slander ()
                 printfn "Bot done slandering"
-                printfn "Sleeping 10 sec"          
-                do! Async.Sleep 10000
 
             with
             | exn -> 
@@ -44,8 +42,8 @@ type public Service() =
 
     override x.OnStart(args:string[]) = 
         printfn "Starting the bot service"
-        printfn "Starting the bot notifier"
-        Async.Start(botNotifier, cancellationSource.Token)
+//        printfn "Starting the bot notifier"
+//        Async.Start(botNotifier, cancellationSource.Token)
         printfn "Starting the bot responder"
         Async.Start(botResponder, cancellationSource.Token)
         printfn "The bot service has started."
