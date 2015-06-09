@@ -3,6 +3,8 @@
 open System.ServiceProcess
 open TalBot
 open System.Threading
+open TalBot.Configuration
+open BotHelper
 
 type public Service() =
     inherit ServiceBase(ServiceName = "TalBot")
@@ -12,7 +14,7 @@ type public Service() =
         while true do
             try
                 printfn "Asking bot to speak"
-                //Bot.speak      
+                Bot.speak      
                 printfn "Bot done speaking"
                 printfn "Sleeping 10 min"          
                 do! Async.Sleep 600000
@@ -24,34 +26,22 @@ type public Service() =
                 printfn "Sleeping 15 min"
                 do! Async.Sleep 900000
         }
-        
-    let botResponder = async {
-        while true do
-            try
-                printfn "Asking bot to check for gossip"
-                Bot.slander ()
-                printfn "Bot done slandering"
-
-            with
-            | exn -> 
-                Bot.attemptToLog exn
-                printf "Error: %s" exn.Message
-                printfn "Sleeping 10 sec"
-                do! Async.Sleep 10000
-        }
+                    
+    let botResponder = Bot.slander ()
 
     override x.OnStart(args:string[]) = 
         printfn "Starting the bot service"
-//        printfn "Starting the bot notifier"
-//        Async.Start(botNotifier, cancellationSource.Token)
+        printfn "Starting the bot notifier"
+        Async.Start(botNotifier, cancellationSource.Token)
         printfn "Starting the bot responder"
-        Async.Start(botResponder, cancellationSource.Token)
+        botResponder |> ignore
         printfn "The bot service has started."
         base.OnStart(args)
 
     override x.OnStop() = 
         // Signal the thread to end.
         printfn "Stopping the service."
+        botResponder.Dispose()
         cancellationSource.Cancel()
         base.OnStop()
         printfn "Service Ended"

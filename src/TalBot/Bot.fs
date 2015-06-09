@@ -4,7 +4,6 @@ open TalBot
 
 module Bot =
     open Configuration
-    open Responses
     open BotHelper
     
     // Generates messages by loading and running provided plugins
@@ -18,11 +17,8 @@ module Bot =
         match useServiceBus with
         | true -> 
             postToServiceQueue incomingMessage
-            ticketResponse incomingMessage
-            //blankResponse
+            blankResponse
         | false -> ticketResponse incomingMessage
-
-//        ticketResponse incomingMessage
 
     // Evaluates a suspicious incoming message and responds or passes it along with approval to process
     let respond suspectIncomingMessage =
@@ -46,5 +42,4 @@ module Bot =
             printf "Failed to log message: %s" exn.Message
 
     let slander () =
-        printfn "read from service queue"
         readFromServiceQueue ()

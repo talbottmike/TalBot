@@ -3,50 +3,25 @@
 open TalBot.Configuration
 open FSharp.CloudAgent
 open FSharp.CloudAgent.Connections
+open FSharp.CloudAgent.Messaging
 open FSharp.Data
 open Microsoft.ServiceBus.Messaging
 open Newtonsoft.Json
 open System
+open System.Text.RegularExpressions
 open TalBot
-open FSharp.CloudAgent.Messaging
+
+// Blank response can be used to ignore to an incoming message
+let blankResponse = { Response.text = ""; username = ""; icon_emoji = "" }
+
+// Get all matches for a regex pattern
+let regexMatches pattern input =
+    Regex.Matches(input,pattern,RegexOptions.IgnoreCase) 
+    |> Seq.cast
+    |> Seq.map (fun (regMatch:Match) -> regMatch.Value)
 
 // Serialize incoming message to Json
 let serializeIncomingMessage incomingMessage = JsonConvert.SerializeObject(incomingMessage)
-
-// A function which creates an Agent on demand.
-let createResilientAgent agentId =
-    MailboxProcessor.Start(fun inbox ->
-        async {
-            while true do
-                let! message, replyChannel = inbox.Receive()
-                printfn "%s is the channelName." message.channelName
-                printfn "%s" (agentId.ToString())
-                
-                match message with
-                | { channelName = "#bot-log" } -> 
-                    printfn "success"
-                    replyChannel Completed // all good, message was processed
-                | { channelName = "snapple" } -> 
-                    printfn "snapple failed"
-                    replyChannel Failed // error occurred, try again
-                | _ -> 
-                    printfn "abandoned"
-                    replyChannel Abandoned // give up with this message.
-        })
-
-// Post incoming message to service bus queue
-let postToServiceQueue (incomingMessage:IncomingMessage) =
-    let serviceBusWriteConnection = ServiceBusConnection serviceBusWriteConnectionString
-    let cloudWriteConnection = WorkerCloudConnection(serviceBusWriteConnection, Queue "queue")
-    let sendToMessageQueue = ConnectionFactory.SendToWorkerPool cloudWriteConnection
-    Async.RunSynchronously (sendToMessageQueue incomingMessage)
-
-let readFromServiceQueue () =
-    let serviceBusReadConnection () = ServiceBusConnection serviceBusReadConnectionString
-    let cloudReadConnection () = WorkerCloudConnection(serviceBusReadConnection (), Queue "queue")
-    printfn "trying to read from the queue"
-    let disposable = ConnectionFactory.StartListening(cloudReadConnection (), createResilientAgent >> Messaging.CloudAgentKind.ResilientCloudAgent)
-    disposable.Dispose()    
 
 // Post payload to slack
 let postToSlack payload = 
@@ -79,6 +54,38 @@ let buildDebugPayload message =
     let b = buildPayload message
     { b with channel=debugChannel}
 
+// Create a response with a link to the ticket referenced in the incoming message
+let ticketResponse (incomingMessage:IncomingMessage) =    
+    let joeism = 
+        match Math.Floor(incomingMessage.timestamp) % 2m = 0m with
+        | true -> " light it up!"
+        | false -> " ticket on deck!"
+
+    let getMatches str = 
+        regexMatches ticketRegex str
+
+    let makeLinks matches = 
+        matches |> Seq.map (fun x -> "<" + ticketUriPrefix + x + "|" + x + ">") |> String.concat "\n" 
+
+    let matches = getMatches incomingMessage.text
+    match matches with
+    | x when Seq.isEmpty x -> 
+        match debugChannel with
+        | "" | null -> ()
+        | _ ->
+            let txt = serializeIncomingMessage incomingMessage
+            buildDebugPayload {OutgoingMessage.destination=debugChannel; sender="TalBot"; text=txt; icon=":smile:";} |> postToSlack
+            
+        { Response.text = "I can create links for tickets that match the following regex " + ticketRegex; username = "TalBot"; icon_emoji = ":stuck_out_tongue_winking_eye:" }
+    | x ->   
+        {Response.text =  "@" + incomingMessage.userName + joeism + "\n" + (makeLinks x); username = "TalBot"; icon_emoji = ":smile:" }
+
+// Create a response with a link to the ticket referenced in the incoming message
+let postTicketResponse (incomingMessage:IncomingMessage) =    
+    let response = ticketResponse incomingMessage
+    let payload = buildPayload {OutgoingMessage.destination="#"+incomingMessage.channelName; sender=response.username; text=response.text; icon=response.icon_emoji;}
+    postToSlack payload
+
 // Run notification plugins to get messages
 let getMessagesFromPlugins =
     let plugins = PluginLoader.load
@@ -107,3 +114,26 @@ let postNewMessages messages =
 let saveMessagesToLog messages =
     let serialized = JsonConvert.SerializeObject(messages)
     MessageLog.Save serialized
+
+// A function which creates an Agent on demand.
+let createAgent agentId =
+    MailboxProcessor.Start(fun inbox ->
+        async {
+            while true do
+                let! message = inbox.Receive()
+                printfn "%s is the channelName." message.channelName
+                postTicketResponse message
+                printfn "text: %s" message.text                
+        })
+
+// Post incoming message to service bus queue
+let postToServiceQueue (incomingMessage:IncomingMessage) =
+    let serviceBusWriteConnection = ServiceBusConnection serviceBusWriteConnectionString
+    let cloudWriteConnection = WorkerCloudConnection(serviceBusWriteConnection, Queue "queue")
+    let sendToMessageQueue = ConnectionFactory.SendToWorkerPool cloudWriteConnection
+    Async.RunSynchronously (sendToMessageQueue incomingMessage)
+
+let readFromServiceQueue () =
+    let serviceBusReadConnection = ServiceBusConnection serviceBusReadConnectionString
+    let cloudReadConnection = WorkerCloudConnection(serviceBusReadConnection, Queue "queue")
+    ConnectionFactory.StartListening(cloudReadConnection, createAgent >> Messaging.CloudAgentKind.BasicCloudAgent)

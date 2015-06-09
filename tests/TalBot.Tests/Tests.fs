@@ -12,5 +12,5 @@ let ``hello returns 42`` () =
 [<Test>]
 let ``regexMatchesMultipleTickets`` () =
     let expected = ["MYPRO-1231";"MY-1"]
-    let actual = Responses.regexMatches @"\w{2,5}-\d{1,5}" "bot MYPRO-1231 MY-1"
+    let actual = BotHelper.regexMatches @"\w{2,5}-\d{1,5}" "bot MYPRO-1231 MY-1"
     Assert.AreEqual(expected,actual)

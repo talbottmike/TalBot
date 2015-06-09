@@ -69,7 +69,6 @@
     <Compile Include="PluginLoader.fs" />
     <Compile Include="MessageLog.fs" />
     <Compile Include="BotHelper.fs" />
-    <Compile Include="Responses.fs" />
     <Compile Include="Bot.fs" />
   </ItemGroup>
   <ItemGroup>
