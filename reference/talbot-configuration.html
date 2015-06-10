@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>Bot - TalBot</title>
+    <title>Configuration - TalBot</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content=""/>
     <meta name="author" content="Mike Talbott"/>
@@ -35,7 +35,7 @@
 
 
 
-<h1>Bot</h1>
+<h1>Configuration</h1>
 <div class="xmldoc">
 </div>
 
@@ -50,15 +50,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '1', 1)" onmouseover="showTip(event, '1', 1)">
-            attemptToLog exn
+          <code onmouseout="hideTip(event, '6', 6)" onmouseover="showTip(event, '6', 6)">
+            debugChannel 
           </code>
-          <div class="tip" id="1">
-            <strong>Signature:</strong> exn:exn -&gt; unit<br />
+          <div class="tip" id="6">
+            <strong>Signature:</strong> string<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/talbottmike/TalBot/tree/master/src/TalBot/Bot.fs#L36-36" class="github-link">
+            <a href="http://github.com/talbottmike/TalBot/tree/master/src/TalBot/Configuration.fs#L7-7" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -68,15 +68,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '2', 2)" onmouseover="showTip(event, '2', 2)">
-            gossip incomingMessage
+          <code onmouseout="hideTip(event, '7', 7)" onmouseover="showTip(event, '7', 7)">
+            inDebug 
           </code>
-          <div class="tip" id="2">
-            <strong>Signature:</strong> incomingMessage:IncomingMessage -&gt; Response<br />
+          <div class="tip" id="7">
+            <strong>Signature:</strong> DebugOption<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/talbottmike/TalBot/tree/master/src/TalBot/Bot.fs#L16-16" class="github-link">
+            <a href="http://github.com/talbottmike/TalBot/tree/master/src/TalBot/Configuration.fs#L9-9" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -86,15 +86,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '3', 3)" onmouseover="showTip(event, '3', 3)">
-            respond suspectIncomingMessage
+          <code onmouseout="hideTip(event, '8', 8)" onmouseover="showTip(event, '8', 8)">
+            serviceBusReadConnectionString 
           </code>
-          <div class="tip" id="3">
-            <strong>Signature:</strong> suspectIncomingMessage:IncomingMessage option -&gt; Response<br />
+          <div class="tip" id="8">
+            <strong>Signature:</strong> string<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/talbottmike/TalBot/tree/master/src/TalBot/Bot.fs#L24-24" class="github-link">
+            <a href="http://github.com/talbottmike/TalBot/tree/master/src/TalBot/Configuration.fs#L14-14" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -104,15 +104,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '4', 4)" onmouseover="showTip(event, '4', 4)">
-            slander ()
+          <code onmouseout="hideTip(event, '9', 9)" onmouseover="showTip(event, '9', 9)">
+            serviceBusWriteConnectionString 
           </code>
-          <div class="tip" id="4">
-            <strong>Signature:</strong> unit -&gt; IDisposable<br />
+          <div class="tip" id="9">
+            <strong>Signature:</strong> string<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/talbottmike/TalBot/tree/master/src/TalBot/Bot.fs#L44-44" class="github-link">
+            <a href="http://github.com/talbottmike/TalBot/tree/master/src/TalBot/Configuration.fs#L15-15" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -122,15 +122,87 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '5', 5)" onmouseover="showTip(event, '5', 5)">
-            speak 
+          <code onmouseout="hideTip(event, '10', 10)" onmouseover="showTip(event, '10', 10)">
+            slackToken 
           </code>
-          <div class="tip" id="5">
-            <strong>Signature:</strong> unit<br />
+          <div class="tip" id="10">
+            <strong>Signature:</strong> string<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/talbottmike/TalBot/tree/master/src/TalBot/Bot.fs#L10-10" class="github-link">
+            <a href="http://github.com/talbottmike/TalBot/tree/master/src/TalBot/Configuration.fs#L16-16" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '11', 11)" onmouseover="showTip(event, '11', 11)">
+            ticketRegex 
+          </code>
+          <div class="tip" id="11">
+            <strong>Signature:</strong> string<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/talbottmike/TalBot/tree/master/src/TalBot/Configuration.fs#L17-17" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '12', 12)" onmouseover="showTip(event, '12', 12)">
+            ticketUriPrefix 
+          </code>
+          <div class="tip" id="12">
+            <strong>Signature:</strong> string<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/talbottmike/TalBot/tree/master/src/TalBot/Configuration.fs#L18-18" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '13', 13)" onmouseover="showTip(event, '13', 13)">
+            uri 
+          </code>
+          <div class="tip" id="13">
+            <strong>Signature:</strong> string<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/talbottmike/TalBot/tree/master/src/TalBot/Configuration.fs#L19-19" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '14', 14)" onmouseover="showTip(event, '14', 14)">
+            useServiceBus 
+          </code>
+          <div class="tip" id="14">
+            <strong>Signature:</strong> bool<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/talbottmike/TalBot/tree/master/src/TalBot/Configuration.fs#L21-21" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
