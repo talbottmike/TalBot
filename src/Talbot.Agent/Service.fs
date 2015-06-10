@@ -1,34 +1,48 @@
 ﻿namespace TalBot.Agent
 
 open System.ServiceProcess
-open System.Threading.Tasks
-open System
 open TalBot
+open System.Threading
+open TalBot.Configuration
+open BotHelper
 
-type public Service(debugOption:DebugOption) =
+type public Service() =
     inherit ServiceBase(ServiceName = "TalBot")
-    let engine = new Engine(debugOption)
-    let mutable serviceTask : Task = null
+    let cancellationSource = new CancellationTokenSource()
 
-    member this.IsRunning 
-        with get() = engine.IsRunning
+    let botNotifier = async {
+        while true do
+            try
+                printfn "Asking bot to speak"
+                Bot.speak      
+                printfn "Bot done speaking"
+                printfn "Sleeping 10 min"          
+                do! Async.Sleep 600000
+
+            with
+            | exn -> 
+                Bot.attemptToLog exn
+                printf "Error: %s" exn.Message
+                printfn "Sleeping 15 min"
+                do! Async.Sleep 900000
+        }
+                    
+    let botResponder = Bot.slander ()
 
     override x.OnStart(args:string[]) = 
-        printfn "Starting the service."
-        serviceTask <- System.Threading.Tasks.Task.Run(fun _ -> engine.Run) 
-        printfn "The service has started."
+        printfn "Starting the bot service"
+        printfn "Starting the bot notifier"
+        Async.Start(botNotifier, cancellationSource.Token)
+        printfn "Starting the bot responder"
+        botResponder |> ignore
+        printfn "The bot service has started."
         base.OnStart(args)
 
     override x.OnStop() = 
         // Signal the thread to end.
         printfn "Stopping the service."
-        engine.Stop()
-
-        // Wait one minute for the thread to end.
-        match serviceTask.Wait(new TimeSpan(0, 1, 0)) with
-        | true -> printfn "The service has stopped."
-        | false -> printfn "The service has stopped without completion."
-
+        botResponder.Dispose()
+        cancellationSource.Cancel()
         base.OnStop()
         printfn "Service Ended"
 

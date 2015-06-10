@@ -2,7 +2,7 @@
 
 namespace TalBot.CSharpPlugins
 {
-    public class SamplePlugin2 : IPlugin
+    public class SamplePlugin2 : INotificationPlugin
     {
         public IEnumerable<OutgoingMessage> Run()
         {

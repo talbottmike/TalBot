@@ -1,13 +1,8 @@
 source https://nuget.org/api/v2
 
-nuget FSharp.Formatting
-nuget FSharp.Data
-nuget NUnit 
-nuget NUnit.Runners
 nuget FAKE
-nuget SourceLink.Fake
-nuget NLog
-nuget Newtonsoft.Json
+nuget FSharp.Data
+nuget FSharp.Formatting
 nuget FsWebAddRegistryEntries
 nuget Microsoft.AspNet.WebApi.Client
 nuget Microsoft.AspNet.WebApi.Core
@@ -15,6 +10,12 @@ nuget Microsoft.AspNet.WebApi.Owin
 nuget Microsoft.Owin
 nuget Microsoft.Owin.Host.SystemWeb
 nuget MSBuild.Extension.Pack
+nuget Newtonsoft.Json
+nuget NLog
+nuget NUnit 
+nuget NUnit.Runners
 nuget Owin
+nuget SourceLink.Fake
+nuget FSharp.CloudAgent
 
 github fsharp/FAKE modules/Octokit/Octokit.fsx

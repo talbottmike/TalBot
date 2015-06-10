@@ -5,7 +5,7 @@ open TalBot
 open System.Collections.Generic
 
 type FolderMonitorSample() =
-    interface IPlugin with
+    interface INotificationPlugin with
         member x.Run(): IEnumerable<OutgoingMessage> =    
             new DirectoryInfo(@"C:\Test")
             |> (fun x -> x.GetDirectories(""))
@@ -19,7 +19,7 @@ type FolderMonitorSample() =
                     })
 
 type SampleFSharpPlugin() =
-    interface IPlugin with
+    interface INotificationPlugin with
         member x.Run(): IEnumerable<OutgoingMessage> =    
             [|{
                 OutgoingMessage.destination = "SlackBot";

@@ -68,7 +68,6 @@
     </Content>
     <None Include="paket.references" />
     <Compile Include="ArgumentParser.fs" />
-    <Compile Include="Engine.fs" />
     <Compile Include="Service.fs" />
     <Compile Include="ServiceHelper.fs" />
     <Compile Include="Program.fs" />

@@ -5,10 +5,13 @@ open System.IO
 open System.Reflection
 open TalBot
 
+// Path of the running executable
 let directoryPath = AppDomain.CurrentDomain.BaseDirectory
+
+// Path of plugins to load
 let pluginPath = directoryPath + "Plugins"
-//let pluginPath = @"C:\Workspaces\Personal\TalBot\src\TalBot.PluginsCSharp\bin\Debug\"
-//let pluginPath = @"C:\Workspaces\Personal\TalBot\src\TalBot.PluginsFSharp\bin\Debug\"
+
+// Gets assembly files that implement the plugin interface
 let files path = 
     let loadedAssemblies = 
         AppDomain.CurrentDomain.GetAssemblies() 
@@ -21,6 +24,7 @@ let files path =
         |> Seq.toList
     nonLoadedAssemblyFiles
 
+// Gets instances of the implemented plugins from the assembly file
 let getPluginsFromFile file =
         try
             let a = Assembly.LoadFrom(file)
@@ -29,16 +33,17 @@ let getPluginsFromFile file =
                     if i.Name = "IPlugin" && i.Namespace = "TalBot" then
                         let pluginObject = a.CreateInstance(t.FullName)
                         match pluginObject with 
-                        | :? IPlugin -> 
+                        | :? INotificationPlugin -> 
                             printfn "Valid plugin loaded %s" t.FullName
-                            yield a.CreateInstance(t.FullName) :?> IPlugin
+                            yield a.CreateInstance(t.FullName) :?> INotificationPlugin
                         | _ -> printfn "Invalid plugin %s" t.FullName ]
         with
         | exn ->
             // if we fail, we'll just skip this assembly.
             printfn "Error loading assembly from file %s with exception %s" file exn.Message
-            List.empty<IPlugin>
+            List.empty<INotificationPlugin>
 
+// Gets a collection of plugins
 let load =
     Directory.CreateDirectory(pluginPath) |> ignore
     let f = files pluginPath
