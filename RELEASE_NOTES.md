@@ -1,3 +1,7 @@
+#### 0.0.4-beta - June 10 2015
+* Updates to use Azure service bus
+* Updates to Plugin interface
+
 #### 0.0.3-beta - May 24 2015
 * NuGet package release
 
