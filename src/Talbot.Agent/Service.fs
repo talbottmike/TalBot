@@ -32,6 +32,7 @@ type public Service() =
     override x.OnStart(args:string[]) = 
         printfn "Starting the bot service"
         printfn "Starting the bot notifier"
+        printfn "Asking bot to speak"
         Async.Start(botNotifier, cancellationSource.Token)
         printfn "Starting the bot responder"
         botResponder |> ignore

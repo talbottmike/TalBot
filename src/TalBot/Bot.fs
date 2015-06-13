@@ -1,6 +1,7 @@
 ﻿namespace TalBot
 
 open TalBot
+open TalBot.Extensions
 
 module Bot =
     open Configuration
@@ -39,7 +40,7 @@ module Bot =
             buildDebugPayload message |> postToSlack
         with
         | exn -> 
-            printf "Failed to log message: %s" exn.Message
+            printfn "Failed to log message: %s" exn.ToDetailedString
 
     let slander () =
         readFromServiceQueue ()

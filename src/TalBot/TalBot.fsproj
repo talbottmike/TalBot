@@ -64,6 +64,7 @@
     <None Include="paket.references" />
     <None Include="paket.template" />
     <Compile Include="Types.fs" />
+    <Compile Include="Extensions.fs" />
     <Compile Include="Configuration.fs" />
     <Compile Include="Interfaces.fs" />
     <Compile Include="PluginLoader.fs" />

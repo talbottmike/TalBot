@@ -7,9 +7,11 @@ open NLog
 open System
 open System.Threading
 open System.Diagnostics
+open System.Reflection
 open System.ServiceProcess
 open ServiceHelper
 open TalBot
+open TalBot.Extensions
 
 let getLogger serviceName =
     // Configure logging
@@ -41,6 +43,27 @@ let main argv =
         ()
     
     AppDomain.CurrentDomain.UnhandledException.AddHandler(UnhandledExceptionEventHandler(domainError))
+    
+    System.AppDomain.CurrentDomain.add_AssemblyResolve ( System.ResolveEventHandler (fun _ args ->
+        let resolvedAssembly =
+            System.AppDomain.CurrentDomain.GetAssemblies ()
+            |> Array.tryFind (fun loadedAssembly ->
+                args.Name = loadedAssembly.FullName
+                || args.Name = loadedAssembly.GetName().Name)
+        
+        match resolvedAssembly with
+        | Some assembly -> assembly
+        | None -> 
+            let argName = 
+                match args.Name.IndexOf(",") with
+                | t when t > 0 -> args.Name.Substring(0, t)
+                | _ -> args.Name
+            let expectedLocation = System.IO.Path.Combine(PluginLoader.pluginPath, (argName + ".dll" ))
+            printfn "Loading assembly from: %s" expectedLocation
+            match System.IO.File.Exists expectedLocation with
+            | true -> Assembly.LoadFrom expectedLocation
+            | false -> null
+        ))
 
     try
         let mutable thread = Thread.CurrentThread
@@ -59,7 +82,7 @@ let main argv =
                 ServiceHelper.uninstallService args.serviceName
             with
             | exn -> 
-                let message = exn.Message + " ServiceName: " + args.serviceName
+                let message = exn.ToDetailedString + " ServiceName: " + args.serviceName
                 logger.Fatal(message)
 
         let debugWait () = 
@@ -100,7 +123,7 @@ let main argv =
             logger.Info("Uninstalling service: " + args.serviceName)
             uninstallService()
     with
-        | x -> 
-            logger.Fatal("Exception: " + x.Message, x)
+        | exn -> 
+            logger.Fatal("Exception: " + exn.ToDetailedString, exn)
 
     0 // return an integer exit code
