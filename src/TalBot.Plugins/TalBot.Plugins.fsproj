@@ -5,14 +5,14 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>5c5147c7-e4ca-4930-b54f-32a5d2614990</ProjectGuid>
+    <ProjectGuid>{f419a4b9-df73-492a-9530-08389a38ad4c}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>TalBot.Plugins</RootNamespace>
-    <AssemblyName>TalBot.PluginsFSharp</AssemblyName>
+    <AssemblyName>TalBot.Plugins</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Name>TalBot.PluginsFSharp</Name>
+    <Name>TalBot.Plugins</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,7 +22,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>bin\Debug\TalBot.PluginsFSharp.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\TalBot.Plugins.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,7 +31,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>bin\Release\TalBot.PluginsFSharp.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\TalBot.Plugins.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
@@ -50,7 +50,7 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" Condition="Exists('$(FSharpTargetsPath)')" />
   <ItemGroup>
-    <Compile Include="Plugin.fs" />
+    <Compile Include="Response.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

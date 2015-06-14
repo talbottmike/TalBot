@@ -14,17 +14,17 @@ type public Service() =
         while true do
             try
                 printfn "Asking bot to speak"
-                Bot.speak      
+                Bot.speak () 
                 printfn "Bot done speaking"
-                printfn "Sleeping 10 min"          
-                do! Async.Sleep 600000
+                printfn "Sleeping 60 min"          
+                do! Async.Sleep 3600000
 
             with
             | exn -> 
                 Bot.attemptToLog exn
                 printf "Error: %s" exn.Message
-                printfn "Sleeping 15 min"
-                do! Async.Sleep 900000
+                printfn "Sleeping 2 hr"
+                do! Async.Sleep 7200000
         }
                     
     let botResponder = Bot.slander ()
@@ -32,7 +32,6 @@ type public Service() =
     override x.OnStart(args:string[]) = 
         printfn "Starting the bot service"
         printfn "Starting the bot notifier"
-        printfn "Asking bot to speak"
         Async.Start(botNotifier, cancellationSource.Token)
         printfn "Starting the bot responder"
         botResponder |> ignore

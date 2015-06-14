@@ -8,18 +8,21 @@ module Bot =
     open BotHelper
     
     // Generates messages by loading and running provided plugins
-    let speak =
-        let messages = getMessagesFromPlugins
-        postNewMessages messages
-        saveMessagesToLog messages
+    let speak () =
+        let messages = getMessagesFromNotificationPlugins ()
+        printfn "Message count: %d" messages.Length
+        let groupedMessages = messages |> List.groupBy (fun x -> x.sender)
+
+        let postAndLog (sender,messages) = 
+            postNewMessages (sender,messages)
+            saveMessagesToLog (sender,messages)
+
+        groupedMessages |> List.iter postAndLog
     
-    // Responds directly to an incoming message and/or posts to queue for workers to process
+    // Posts to queue for workers to process
     let gossip (incomingMessage:IncomingMessage) =
-        match useServiceBus with
-        | true -> 
             postToServiceQueue incomingMessage
             blankResponse
-        | false -> ticketResponse incomingMessage
 
     // Evaluates a suspicious incoming message and responds or passes it along with approval to process
     let respond suspectIncomingMessage =
@@ -36,7 +39,7 @@ module Bot =
     // Swallows any exceptions that may occur if the log attempt fails
     let attemptToLog (exn:exn) =
         try
-            let message = {OutgoingMessage.destination=debugChannel; sender="TalBot"; text=exn.Message; icon=":open_mouth:";}
+            let message = {OutgoingMessage.destination=debugChannel; sender="TalBot"; text=exn.ToDetailedString; icon=":open_mouth:";}
             buildDebugPayload message |> postToSlack
         with
         | exn -> 

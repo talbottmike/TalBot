@@ -54,44 +54,19 @@ let buildDebugPayload message =
     let b = buildPayload message
     { b with channel=debugChannel}
 
-// Create a response with a link to the ticket referenced in the incoming message
-let ticketResponse (incomingMessage:IncomingMessage) =    
-    let joeism = 
-        match Math.Floor(incomingMessage.timestamp) % 2m = 0m with
-        | true -> " light it up!"
-        | false -> " ticket on deck!"
-
-    let getMatches str = 
-        regexMatches ticketRegex str
-
-    let makeLinks matches = 
-        matches |> Seq.map (fun x -> "<" + ticketUriPrefix + x + "|" + x + ">") |> String.concat "\n" 
-
-    let matches = getMatches incomingMessage.text
-    match matches with
-    | x when Seq.isEmpty x -> 
-        match debugChannel with
-        | "" | null -> ()
-        | _ ->
-            let txt = serializeIncomingMessage incomingMessage
-            buildDebugPayload {OutgoingMessage.destination=debugChannel; sender="TalBot"; text=txt; icon=":smile:";} |> postToSlack
-            
-        { Response.text = "I can create links for tickets that match the following regex " + ticketRegex; username = "TalBot"; icon_emoji = ":stuck_out_tongue_winking_eye:" }
-    | x ->   
-        {Response.text =  "@" + incomingMessage.userName + joeism + "\n" + (makeLinks x); username = "TalBot"; icon_emoji = ":smile:" }
-
-// Create a response with a link to the ticket referenced in the incoming message
-let postTicketResponse (incomingMessage:IncomingMessage) =    
-    let response = ticketResponse incomingMessage
-    let payload = buildPayload {OutgoingMessage.destination="#"+incomingMessage.channelName; sender=response.username; text=response.text; icon=response.icon_emoji;}
-    postToSlack payload
-
 // Run notification plugins to get messages
-let getMessagesFromPlugins =
-    let plugins = PluginLoader.load
+let getMessagesFromNotificationPlugins () =
+    let plugins = PluginLoader.loadNotificationPlugins ()
 
     let pluginResult (plugin:INotificationPlugin) =
-        plugin.Run() |> Seq.map (fun x -> Some(x))   
+        try
+            let result = plugin.Run()
+            result |> Seq.map (fun x -> (Some(x)))   
+        with
+        | exn ->             
+            // if we fail, we'll just log a brief message and skip this plugin
+            printfn "Error running plugin with exception %s" exn.Message
+            Seq.empty
 
     let pluginResults = 
         Seq.collect pluginResult plugins
@@ -99,9 +74,9 @@ let getMessagesFromPlugins =
     pluginResults |> Seq.choose (fun x -> x) |> Seq.toList
 
 // Post only new messages
-let postNewMessages messages = 
-    let messageLog = MessageLog.Read
-    let previousMessages = JsonConvert.DeserializeObject<OutgoingMessage list>(messageLog())
+let postNewMessages (sender,messages) = 
+    let messageLog = MessageLog.Read sender
+    let previousMessages = JsonConvert.DeserializeObject<OutgoingMessage list>(messageLog)
                 
     // If there are no previous logs, we'll just log the existing messages instead of potentially double posting due to lost state.
     match (box previousMessages = null) with
@@ -111,19 +86,25 @@ let postNewMessages messages =
         difference () |> List.map buildPayload  |> List.iter postToSlack
 
 // Save messages that were posted to the log
-let saveMessagesToLog messages =
+let saveMessagesToLog (sender,messages) =
     let serialized = JsonConvert.SerializeObject(messages)
-    MessageLog.Save serialized
+    MessageLog.Save serialized sender
 
-// A function which creates an Agent on demand.
+// Create an Agent on demand to load response plugins and process incoming messages.
 let createAgent agentId =
     MailboxProcessor.Start(fun inbox ->
         async {
             while true do
                 let! message = inbox.Receive()
-                printfn "%s is the channelName." message.channelName
-                postTicketResponse message
-                printfn "text: %s" message.text                
+                let responsePlugins = PluginLoader.loadResponsePlugins ()
+
+                let responsePluginResult (plugin:IResponsePlugin) = 
+                    plugin.Listen message |> Seq.map (fun x -> Some(x))
+
+                let responsePluginResults =
+                    Seq.collect responsePluginResult responsePlugins
+
+                responsePluginResults |> Seq.choose (fun x -> x) |> Seq.map buildPayload |> Seq.iter postToSlack         
         })
 
 // Post incoming message to service bus queue
@@ -133,6 +114,7 @@ let postToServiceQueue (incomingMessage:IncomingMessage) =
     let sendToMessageQueue = ConnectionFactory.SendToWorkerPool cloudWriteConnection
     Async.RunSynchronously (sendToMessageQueue incomingMessage)
 
+// Listen for incoming message from the service bus queue and process using the provided agent
 let readFromServiceQueue () =
     let serviceBusReadConnection = ServiceBusConnection serviceBusReadConnectionString
     let cloudReadConnection = WorkerCloudConnection(serviceBusReadConnection, Queue "queue")
