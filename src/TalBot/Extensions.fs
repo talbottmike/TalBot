@@ -43,10 +43,4 @@ type System.Exception with
                 | _ -> printException exn.InnerException (count+1)
         printException this 1
         sb.ToString()
-
-//let b = 
-//    try
-//        raise (new InvalidOperationException("message"))
-//    with
-//    | exn -> exn.ToDetailedString
     
