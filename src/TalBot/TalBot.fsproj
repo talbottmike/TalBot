@@ -61,6 +61,7 @@
   <Import Project="..\..\.paket\paket.targets" />
   <ItemGroup>
     <None Include="Script.fsx" />
+    <None Include="BotDialog.fsx" />
     <None Include="paket.references" />
     <None Include="paket.template" />
     <Compile Include="Types.fs" />
@@ -69,6 +70,7 @@
     <Compile Include="Interfaces.fs" />
     <Compile Include="PluginLoader.fs" />
     <Compile Include="MessageLog.fs" />
+    <Compile Include="Jira.fs" />
     <Compile Include="BotHelper.fs" />
     <Compile Include="Bot.fs" />
   </ItemGroup>

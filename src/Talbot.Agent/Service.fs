@@ -27,7 +27,7 @@ type public Service() =
                 do! Async.Sleep 7200000
         }
                     
-    let botResponder = Bot.slander ()
+    let botResponder = Bot.listen ()
 
     override x.OnStart(args:string[]) = 
         printfn "Starting the bot service"
@@ -41,7 +41,7 @@ type public Service() =
     override x.OnStop() = 
         // Signal the thread to end.
         printfn "Stopping the service."
-        botResponder.Dispose()
+//        botResponder.Dispose()
         cancellationSource.Cancel()
         base.OnStop()
         printfn "Service Ended"
