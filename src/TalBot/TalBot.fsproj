@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>TalBot</RootNamespace>
     <AssemblyName>TalBot</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
     <Name>TalBot</Name>
     <TargetFrameworkProfile />
@@ -72,7 +72,10 @@
     <Compile Include="MessageLog.fs" />
     <Compile Include="Jira.fs" />
     <Compile Include="BotHelper.fs" />
+    <Compile Include="Slanderer.fs" />
+    <Compile Include="Listener.fs" />
     <Compile Include="Bot.fs" />
+    <None Include="ConfigScript.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
