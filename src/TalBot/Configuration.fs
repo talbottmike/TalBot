@@ -14,8 +14,9 @@ let private getConfig (key:string) =
 
     let valueOption = 
         match value with
-        | null ->
-            Config.GetSample().Adds
+        | null -> 
+            //None
+            Config.Load("private.config").Adds
             |> Seq.filter (fun x -> x.Key = key)
             |> Seq.map (fun x -> x.Value)
             |> Seq.tryHead

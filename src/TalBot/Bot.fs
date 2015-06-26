@@ -5,9 +5,6 @@ open TalBot
 module Bot =
     open Configuration
     open BotHelper
-    open System.Net.WebSockets
-    open System.Threading
-    open System.Threading.Tasks
     open System
     
     // Generates messages by loading and running provided plugins
@@ -48,25 +45,7 @@ module Bot =
         postToSlack payload
 
     let listen () =
-        let webSocket = new ClientWebSocket()
-        Async.AwaitTask (webSocket.ConnectAsync(new Uri(webSocketUri),CancellationToken.None)) |> ignore
-        Thread.Sleep (TimeSpan.FromMilliseconds(1000.00))
-
-        let receive (webSocket : ClientWebSocket) =
-            let buffer = Array.zeroCreate 6000
-            while webSocket.State = WebSocketState.Open do
-                let x = Async.AwaitTask (webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None))
-                let y = Async.RunSynchronously x 
-                match y.MessageType with
-                | WebSocketMessageType.Close ->
-                    webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None).RunSynchronously |> ignore
-                    webSocket.Dispose |> ignore
-                    ()
-                | WebSocketMessageType.Text ->
-                    let s = (System.Text.Encoding.Default.GetString(buffer))
-                    listenerAgent.Post (s.Substring(0, y.Count))
-                | _ -> ()
-        receive webSocket
+        Listener.listen webSocketUri
 
     let slander () =
-        readFromServiceQueue ()
+        Slanderer.slander ()

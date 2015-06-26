@@ -28,8 +28,7 @@ let private tryGetInfo ticketNumber =
         let result = TicketInfo.Parse(response)
         Some (result)
     with
-    | :? System.Net.WebException as ex -> 
-        //printfn "%s" ex.Message
+    | :? System.Net.WebException -> 
         None
 
 let info ticketNumber = orElse {
@@ -60,3 +59,8 @@ let makeTicketResponse ticketNumber =
             | _ -> value.Substring(0,130) + "..."
         Some ("<" + ticketUriPrefix + x.Key + "|" + x.Key + "> " + summary)
     | None -> None
+
+let makeLinks matches = 
+    matches |> Seq.distinct |> Seq.map makeTicketResponse |> Seq.choose (fun x -> x) |> String.concat "\n" 
+
+let ticketRegex = "\w{2,10}-\d{1,5}"
