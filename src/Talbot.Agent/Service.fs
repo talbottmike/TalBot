@@ -10,7 +10,7 @@ type public Service() =
     inherit ServiceBase(ServiceName = "TalBot")
     let cancellationSource = new CancellationTokenSource()
 
-    let botNotifier = async {
+    let botNotifier () = async {
         while true do
             try
                 printfn "Asking bot to speak"
@@ -27,14 +27,16 @@ type public Service() =
                 do! Async.Sleep 7200000
         }
                     
-    let botResponder = Bot.listen ()
+    let botResponder () = async {
+        Bot.listen ()
+        }
 
     override x.OnStart(args:string[]) = 
         printfn "Starting the bot service"
         printfn "Starting the bot notifier"
-        Async.Start(botNotifier, cancellationSource.Token)
+        Async.Start(botNotifier (), cancellationSource.Token)
         printfn "Starting the bot responder"
-        botResponder |> ignore
+        Async.Start(botResponder (), cancellationSource.Token)
         printfn "The bot service has started."
         base.OnStart(args)
 
