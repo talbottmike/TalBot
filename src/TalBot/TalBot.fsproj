@@ -70,8 +70,12 @@
     <Compile Include="Interfaces.fs" />
     <Compile Include="PluginLoader.fs" />
     <Compile Include="MessageLog.fs" />
+    <Compile Include="Slack.fs" />
     <Compile Include="Jira.fs" />
+    <Compile Include="Regex.fs" />
     <Compile Include="BotHelper.fs" />
+    <Compile Include="Notifier.fs" />
+    <Compile Include="Gossiper.fs" />
     <Compile Include="Slanderer.fs" />
     <Compile Include="Listener.fs" />
     <Compile Include="Bot.fs" />

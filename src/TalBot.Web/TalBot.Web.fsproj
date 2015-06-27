@@ -146,6 +146,7 @@
       <Project>{d30544b1-70d8-4f7a-9f86-a403808ba39d}</Project>
       <Private>True</Private>
     </ProjectReference>
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data.DataSetExtensions.dll" />
     <Reference Include="System.Web.ApplicationServices.dll" />
     <Reference Include="System.Web.DynamicData.dll" />

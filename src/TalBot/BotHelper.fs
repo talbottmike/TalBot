@@ -8,7 +8,6 @@ open FSharp.Data
 open Microsoft.ServiceBus.Messaging
 open Newtonsoft.Json
 open System
-open System.Text.RegularExpressions
 open TalBot
 open TalBot.Extensions
 
@@ -141,35 +140,14 @@ let matchMessageType (message:string) =
 //    | "team_migration_started" -> Some TEAM_MIGRATION_STARTED
     | _ -> None
 
-// Get all matches for a regex pattern
-let regexMatches pattern input =
-    Regex.Matches(input,pattern,RegexOptions.IgnoreCase) 
-    |> Seq.cast
-    |> Seq.map (fun (regMatch:Match) -> regMatch.Value)
-
 // Serialize incoming message to Json
 let serializeIncomingMessage incomingMessage = JsonConvert.SerializeObject(incomingMessage)
 
-let postPayload uri payload = 
-    let content = JsonConvert.SerializeObject(payload)
-        
-    match Uri.TryCreate(uri, UriKind.Absolute) with
-    | (true, x) -> Http.RequestString(x.AbsoluteUri.ToString(), body=TextRequest content) |> ignore
-    | (false, _) -> ()
-
-// Post payload to slack
-let postToSlack payload =
-    postPayload uri payload
     
 // Create payload from message
 let buildPayload message =
     {
-        channel=
-            match inDebug with
-            | DebugOption.DebugMode -> 
-                printfn "IN DEBUG MODE"
-                Configuration.debugChannel
-            | DebugOption.NonDebugMode -> message.destination
+        channel= message.destination
         username=
             match message.sender with
             | "" | null -> "TalBot"
@@ -182,7 +160,7 @@ let buildPayload message =
     }
 
 // Create payload from message to post to debug channel      
-let buildDebugPayload message =
+let buildDebugPayload message debugChannel =
     let b = buildPayload message
     { b with channel=debugChannel}
 
@@ -206,7 +184,7 @@ let getMessagesFromNotificationPlugins () =
     pluginResults |> Seq.choose (fun x -> x) |> Seq.toList
 
 // Post only new messages
-let postNewMessages (sender,messages) = 
+let postNewMessages uri (sender,messages) = 
     let messageLog = MessageLog.Read sender
     let previousMessages = JsonConvert.DeserializeObject<OutgoingMessage list>(messageLog)
                 
@@ -215,50 +193,19 @@ let postNewMessages (sender,messages) =
     | true -> ()
     | false -> 
         let difference () = (Set.ofList messages) - (Set.ofList previousMessages) |> Set.toList
-        difference () |> List.map buildPayload  |> List.iter postToSlack
+        let slack = Slack.create uri
+        difference () |> List.map buildPayload  |> List.iter (fun x -> Slack.post x slack)
 
 // Save messages that were posted to the log
 let saveMessagesToLog (sender,messages) =
     let serialized = JsonConvert.SerializeObject(messages)
     MessageLog.Save serialized sender
 
-// Create an Agent on demand to load response plugins and process incoming messages.
-let createAgent agentId =
-    MailboxProcessor.Start(fun inbox ->
-        async {
-            while true do
-                let! message = inbox.Receive()
-                let responsePlugins = PluginLoader.loadResponsePlugins ()
-
-                let responsePluginResult (plugin:IResponsePlugin) = 
-                    plugin.Listen message |> Seq.map (fun x -> Some(x))
-
-                let responsePluginResults =
-                    Seq.collect responsePluginResult responsePlugins
-
-                responsePluginResults |> Seq.choose (fun x -> x) |> Seq.map buildPayload |> Seq.iter postToSlack         
-        })
-
-// Post incoming message to service bus queue
-let postToServiceQueue (incomingMessage:IncomingMessage) =
-    let serviceBusWriteConnection = ServiceBusConnection serviceBusWriteConnectionString
-    let cloudWriteConnection = WorkerCloudConnection(serviceBusWriteConnection, Queue "queue")
-    let sendToMessageQueue = ConnectionFactory.SendToWorkerPool cloudWriteConnection
-    Async.RunSynchronously (sendToMessageQueue incomingMessage)
-
-// Listen for incoming message from the service bus queue and process using the provided agent
-let readFromServiceQueue () =
-    let serviceBusReadConnection = ServiceBusConnection serviceBusReadConnectionString
-    let cloudReadConnection = WorkerCloudConnection(serviceBusReadConnection, Queue "queue")
-    ConnectionFactory.StartListening(cloudReadConnection, createAgent >> Messaging.CloudAgentKind.BasicCloudAgent)
-
-let attemptToLog (exn:exn) =
+let attemptToLog uri debugChannel (exn:exn) =
     try
         let message = {OutgoingMessage.destination=debugChannel; sender="TalBot"; text=exn.ToDetailedString; icon=":open_mouth:";}
-        buildDebugPayload message |> postToSlack
+        let slack = Slack.create uri
+        buildDebugPayload message |> (fun x -> Slack.post x slack)
     with
     | exn -> 
         printfn "Failed to log message: %s" exn.ToDetailedString
-
-let getMatches regex str = 
-    regexMatches regex str

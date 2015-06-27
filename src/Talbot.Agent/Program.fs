@@ -12,6 +12,7 @@ open System.ServiceProcess
 open ServiceHelper
 open TalBot
 open TalBot.Extensions
+open System.Configuration
 
 let getLogger serviceName =
     // Configure logging
@@ -93,7 +94,12 @@ let main argv =
             | true -> Console.ReadKey() |> ignore
             | false -> ()
 
-        match TalBot.Configuration.inDebug with
+        let inDebug = 
+            match ConfigurationManager.AppSettings.Item("DebugOption") with
+            | "false" -> DebugOption.NonDebugMode
+            | _ -> DebugOption.DebugMode
+
+        match inDebug with
         | DebugOption.NonDebugMode -> ()
         | DebugOption.DebugMode -> debugWait()
 

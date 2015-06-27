@@ -1,7 +1,5 @@
 ﻿namespace TalBot
 
-open FSharp.Data
-
 type IncomingMessage = 
     {
         token : string;

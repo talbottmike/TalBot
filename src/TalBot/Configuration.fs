@@ -1,4 +1,26 @@
-﻿module TalBot.Configuration
+﻿namespace TalBot
+
+type SlackConfiguration =
+    {
+        DebugChannel:string;        
+        ServiceBusReadConnectionString:string;
+        ServiceBusWriteConnectionString:string;
+        SlackToken:string;
+        SlackUri:string;
+        WebSocketUri:string;
+    }
+
+type BotConfiguration = 
+    {
+        Name:string;
+    }
+
+type JiraConfiguration =
+    {
+        BaseUri:string;
+        TicketCredentials:string;
+        TicketRegex:string;
+    }
 
 open Microsoft.Azure
 open System.Configuration
@@ -7,52 +29,56 @@ open FSharp.Data
 open System.Text
 open System
 
-type private Config = XmlProvider<"../TalBot.Agent/private.config">
+module Configuration =
+    type private Config = XmlProvider<"../TalBot.Agent/private.config">
 
-let private getConfig (key:string) = 
-    let value = ConfigurationManager.AppSettings.Item(key)
+    let private getConfig (key:string) = 
+        let value = ConfigurationManager.AppSettings.Item(key)
 
-    let valueOption = 
-        match value with
-        | null -> 
-            //None
-            Config.Load("private.config").Adds
-            |> Seq.filter (fun x -> x.Key = key)
-            |> Seq.map (fun x -> x.Value)
-            |> Seq.tryHead
-        | _ -> Some value
+        let valueOption = 
+            match value with
+            | null -> 
+                //None
+                Config.Load("private.config").Adds
+                |> Seq.filter (fun x -> x.Key = key)
+                |> Seq.map (fun x -> x.Value)
+                |> Seq.tryHead
+            | _ -> Some value
 
-    match valueOption with
-    | None -> ""
-    | Some x -> x
+        match valueOption with
+        | None -> ""
+        | Some x -> x
 
-let serviceBusReadConnectionString = getConfig "ServiceBusReadConnectionString"
-let serviceBusWriteConnectionString = CloudConfigurationManager.GetSetting("ServiceBusWriteConnectionString")
-let slackToken = getConfig "SlackToken"
-let debugChannel = getConfig "DebugChannel"
-    
-let inDebug = DebugOption.NonDebugMode
-//    #if COMPILED 
-//        match ConfigurationManager.AppSettings.Item("DebugOption") with
-//        | "false" -> DebugOption.NonDebugMode
-//        | _ -> DebugOption.DebugMode
-//    #else                        
-//        DebugOption.NonDebugMode
-//    #endif
+    let private debugChannel = getConfig "DebugChannel"
+    let private serviceBusReadConnectionString = getConfig "ServiceBusReadConnectionString"
+    let private serviceBusWriteConnectionString = CloudConfigurationManager.GetSetting("ServiceBusWriteConnectionString")
+    let private slackToken = getConfig "SlackToken"
+    let private ticketRegex = getConfig "TicketRegex"
+    let private ticketBaseUri = getConfig "TicketUri"
+    let private ticketCredentials = getConfig "TicketCredentials"
+    let private uri = getConfig "SlackUri"
+    let private webSocketStartUri = getConfig "SlackWebSocketStartUri"
+    type private slackStart = JsonProvider<"""{"ok": true,"url": "wss:\/\/ms144.slack-msgs.com\/websocket\/DGQ="}""">
+    let private webSocketUri = slackStart.Load(webSocketStartUri).Url
 
-let ticketRegex = getConfig "TicketRegex"
-let ticketBaseUri = getConfig "TicketUri"
-let ticketLookupUri = ticketBaseUri + "rest/api/2/issue/"
-let ticketUriPrefix = ticketBaseUri + "browse/"
-let uri = getConfig "SlackUri"
-let private webSocketStartUri = getConfig "SlackWebSocketStartUri"
-type private slackStart = JsonProvider<"""{"ok": true,"url": "wss:\/\/ms144.slack-msgs.com\/websocket\/DGQ="}""">
-let webSocketUri = slackStart.Load(webSocketStartUri).Url
+    let slackConfiguration () = 
+        {
+            DebugChannel=debugChannel;
+            ServiceBusReadConnectionString=serviceBusReadConnectionString;
+            ServiceBusWriteConnectionString=serviceBusWriteConnectionString;
+            SlackToken=slackToken;
+            SlackUri=uri;
+            WebSocketUri=webSocketUri;
+        }
 
-let ticketCredentials = getConfig "TicketCredentials"
-let encodedTicketCredentials =
-    let byteCredentials = UTF8Encoding.UTF8.GetBytes(ticketCredentials)
-    Convert.ToBase64String(byteCredentials)
+    let botConfiguration () = 
+        {
+            Name="TalBot";
+        }
 
-let ticketRequest ticket =
-    Http.Request(ticketLookupUri + ticket, headers = [ "Authorization", "Basic " + encodedTicketCredentials ])
+    let jiraConfiguration () =
+        {
+            BaseUri=ticketBaseUri;
+            TicketCredentials=ticketCredentials;
+            TicketRegex=ticketRegex;
+        }
