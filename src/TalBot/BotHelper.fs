@@ -1,11 +1,6 @@
 ﻿module BotHelper
 
-open TalBot.Configuration
-open FSharp.CloudAgent
-open FSharp.CloudAgent.Connections
-open FSharp.CloudAgent.Messaging
 open FSharp.Data
-open Microsoft.ServiceBus.Messaging
 open Newtonsoft.Json
 open System
 open TalBot
@@ -14,7 +9,6 @@ open TalBot.Extensions
 // Blank response can be used to ignore to an incoming message
 let blankResponse = { Response.text = ""; username = ""; icon_emoji = "" }
 type MessageType = JsonProvider<"""{"type": "hello","subtype": "bot_message"}""">
-type Message = JsonProvider<"""{"reply_to":10000,"type":"message","channel":"C04FOOBAR","user":"U04FOOBAR","text":"test-7","ts":"1434721567.000002"}""">
 type BotMessage = JsonProvider<"""{"type": "message","subtype": "bot_message","ts": "1358877455.000010","text": "Pushing is the answer","bot_id": "BFOOBAR","username": "github","icons": {}}""">
 
 type SlackMessageType = 

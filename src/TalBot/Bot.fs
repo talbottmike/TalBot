@@ -5,8 +5,6 @@ open Configuration
 open BotHelper
 
 type Bot(botConfiguration,slackConfiguration) = 
-//    member val BotConfiguration = botConfiguration
-//    member val SlackConfiguration = slackConfiguration
 
     // Generates messages by loading and running provided plugins
     member this.Speak () =
@@ -47,8 +45,9 @@ type Bot(botConfiguration,slackConfiguration) =
         Slack.post payload slack
 
     member this.Listen () =
-        let jira = Jira(Configuration.jiraConfiguration ())
-        let listener = Listener(slackConfiguration.SlackUri, slackConfiguration.DebugChannel,jira)
+        let jira = Jira(Configuration.jiraConfiguration ())        
+        let messageHandlers = [Agents.jiraAgent jira slackConfiguration.SlackUri;]
+        let listener = Listener(slackConfiguration.SlackUri, slackConfiguration.DebugChannel, messageHandlers)
         listener.Listen slackConfiguration.WebSocketUri
 
     member this.Slander () =

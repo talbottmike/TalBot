@@ -74,6 +74,7 @@
     <Compile Include="Jira.fs" />
     <Compile Include="Regex.fs" />
     <Compile Include="BotHelper.fs" />
+    <Compile Include="Agents.fs" />
     <Compile Include="Notifier.fs" />
     <Compile Include="Gossiper.fs" />
     <Compile Include="Slanderer.fs" />

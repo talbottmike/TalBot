@@ -1,27 +1,5 @@
 ﻿namespace TalBot
 
-type SlackConfiguration =
-    {
-        DebugChannel:string;        
-        ServiceBusReadConnectionString:string;
-        ServiceBusWriteConnectionString:string;
-        SlackToken:string;
-        SlackUri:string;
-        WebSocketUri:string;
-    }
-
-type BotConfiguration = 
-    {
-        Name:string;
-    }
-
-type JiraConfiguration =
-    {
-        BaseUri:string;
-        TicketCredentials:string;
-        TicketRegex:string;
-    }
-
 open Microsoft.Azure
 open System.Configuration
 open TalBot
@@ -31,54 +9,46 @@ open System
 
 module Configuration =
     type private Config = XmlProvider<"../TalBot.Agent/private.config">
+    type slackStart = JsonProvider<"""{"ok": true,"url": "wss:\/\/ms144.slack-msgs.com\/websocket\/DGQ="}""">
 
-    let private getConfig (key:string) = 
-        let value = ConfigurationManager.AppSettings.Item(key)
-
-        let valueOption = 
-            match value with
-            | null -> 
-                //None
-                Config.Load("private.config").Adds
-                |> Seq.filter (fun x -> x.Key = key)
-                |> Seq.map (fun x -> x.Value)
+    let private getConfig interactiveConfigurationPath (key:string) = 
+        match interactiveConfigurationPath with
+        | None -> 
+            match ConfigurationManager.AppSettings.Item(key) with
+            | null -> ""
+            | x -> x
+        | Some (x:string) ->
+            let valueOption =
+                Config.Load(x).Adds
+                |> Seq.filter (fun y -> y.Key = key)
+                |> Seq.map (fun y -> y.Value)
                 |> Seq.tryHead
-            | _ -> Some value
+            
+            match valueOption with
+            | None -> ""
+            | Some x -> x
 
-        match valueOption with
-        | None -> ""
-        | Some x -> x
-
-    let private debugChannel = getConfig "DebugChannel"
-    let private serviceBusReadConnectionString = getConfig "ServiceBusReadConnectionString"
-    let private serviceBusWriteConnectionString = CloudConfigurationManager.GetSetting("ServiceBusWriteConnectionString")
-    let private slackToken = getConfig "SlackToken"
-    let private ticketRegex = getConfig "TicketRegex"
-    let private ticketBaseUri = getConfig "TicketUri"
-    let private ticketCredentials = getConfig "TicketCredentials"
-    let private uri = getConfig "SlackUri"
-    let private webSocketStartUri = getConfig "SlackWebSocketStartUri"
-    type private slackStart = JsonProvider<"""{"ok": true,"url": "wss:\/\/ms144.slack-msgs.com\/websocket\/DGQ="}""">
-    let private webSocketUri = slackStart.Load(webSocketStartUri).Url
-
-    let slackConfiguration () = 
+    let private jiraConfig interactiveConfigurationPath =
         {
-            DebugChannel=debugChannel;
-            ServiceBusReadConnectionString=serviceBusReadConnectionString;
-            ServiceBusWriteConnectionString=serviceBusWriteConnectionString;
-            SlackToken=slackToken;
-            SlackUri=uri;
-            WebSocketUri=webSocketUri;
+            BaseUri=getConfig interactiveConfigurationPath "TicketUri";
+            TicketCredentials=getConfig interactiveConfigurationPath "TicketCredentials";
+            TicketRegex=getConfig interactiveConfigurationPath "TicketRegex";
         }
 
-    let botConfiguration () = 
+    let private slackConfig interactiveConfigurationPath =
         {
-            Name="TalBot";
+            DebugChannel=getConfig interactiveConfigurationPath "DebugChannel";
+            ServiceBusReadConnectionString=getConfig interactiveConfigurationPath "ServiceBusReadConnectionString";
+            ServiceBusWriteConnectionString=getConfig interactiveConfigurationPath "ServiceBusWriteConnectionString";
+            SlackToken=getConfig interactiveConfigurationPath "SlackToken";
+            SlackUri=getConfig interactiveConfigurationPath "SlackUri";
+            WebSocketUri=
+                let webSocketStartUri = getConfig interactiveConfigurationPath "SlackWebSocketStartUri"
+                slackStart.Load(webSocketStartUri).Url
         }
 
-    let jiraConfiguration () =
-        {
-            BaseUri=ticketBaseUri;
-            TicketCredentials=ticketCredentials;
-            TicketRegex=ticketRegex;
-        }
+    let slackConfiguration () = slackConfig None
+    let slackConfigurationInteractive configurationPath = slackConfig <| Some configurationPath
+    let botConfiguration () = {Name="TalBot";} 
+    let jiraConfiguration () = jiraConfig None
+    let jiraConfigurationInteractive configurationPath = jiraConfig <| Some configurationPath

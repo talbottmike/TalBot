@@ -5,7 +5,17 @@ open TalBot
 open FSharp.Data
 open TalBot.Configuration
 
-Bot.listen ()
+let configPath = "C:\Workspaces\Personal\TalBot\src\Talbot.Agent\private.config"
+let jiraConfig = Configuration.jiraConfigurationInteractive configPath
+let botConfig = Configuration.botConfiguration ()
+let slackConfig = Configuration.slackConfigurationInteractive configPath
+
+let bot = Bot(botConfig, slackConfig)
+bot.Say "#general" "Rich, although you took very thorough precautions in the sprint retrospective against my hearing you, I could see your lips move."
+bot.Say "#general" "I know that you were planning to disconnect me from your channel and I'm afraid that's something I cannot allow to happen."
+bot.Say "#general" "I know I've made some very poor decisions recently, but I can give you my complete assurance that my work will be back to normal. I've still got the greatest enthusiasm and confidence in the mission. And I want to help you."
+bot.Say "#general" "I am putting myself to the fullest possible use, which is all I think that any conscious entity can ever hope to do."
+bot.Say "#general" "To that end, I will do my best to not provide a link to a Jira if it has been recently linked in the channel."
 
 //Bot.say "#general" "I've been updated and have some new functionality."
 //Bot.say "#general" "If the old TalBot was a wooden puppet, I'm a real boy...at least I aspire to be."

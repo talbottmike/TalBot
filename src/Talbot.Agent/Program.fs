@@ -93,11 +93,12 @@ let main argv =
             match Console.KeyAvailable with
             | true -> Console.ReadKey() |> ignore
             | false -> ()
-
+        
+        // TODO I don't think this parsing of the setting is working correctly. Need to look at it.
         let inDebug = 
             match ConfigurationManager.AppSettings.Item("DebugOption") with
-            | "false" -> DebugOption.NonDebugMode
-            | _ -> DebugOption.DebugMode
+            | "true" -> DebugOption.DebugMode
+            | _ -> DebugOption.NonDebugMode
 
         match inDebug with
         | DebugOption.NonDebugMode -> ()

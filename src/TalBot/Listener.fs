@@ -6,7 +6,7 @@ open System.Net.WebSockets
 open System.Threading
 open System
 
-type Listener(slackUri, debugChannel,jira:Jira) =
+type Listener(slackUri, debugChannel, messageHandlers:MailboxProcessor<Message.Root> list) =
 
     //##nowarn "40"
     let listenerAgent = MailboxProcessor.Start(fun inbox-> 
@@ -18,25 +18,19 @@ type Listener(slackUri, debugChannel,jira:Jira) =
 
             try
                 let mt = MessageType.Parse(msg)
-                let slack = Slack.create slackUri
                 match matchMessageType msg with
                 | None -> ()
                 | Some SlackMessageType.HELLO -> 
                     printfn "slack says %s" mt.Type
                     let payload = 
                         buildPayload {OutgoingMessage.destination="#bot-log"; sender="TalBot"; text="The old bot was a wooden toy. I'm a real boy."; icon=":talbot:"}
+                    let slack = Slack.create slackUri
                     Slack.post payload slack
                 | Some SlackMessageType.MESSAGE ->
                     printfn "message is: %s" msg
                     let m = Message.Parse(msg)
-                    let getJiraMatches = Regex.getMatches jira.TicketRegex
-                    match getJiraMatches m.Text with
-                        | x when Seq.isEmpty x -> ()
-                        | x ->
-                            x |> Seq.map (fun y -> jira.MakeTicketResponse y)
-                            |> Seq.choose (fun y -> y)
-                            |> Seq.map (fun y -> buildPayload {OutgoingMessage.destination=m.Channel; sender="TalBot"; text= y; icon=":talbot:"})
-                            |> Seq.iter (fun x -> Slack.post x slack)
+                    
+                    messageHandlers |> Seq.iter (fun x -> x.Post m)
                 | Some SlackMessageType.BOTMESSAGE ->
                     printfn "bot_message is: %s" msg
             with
