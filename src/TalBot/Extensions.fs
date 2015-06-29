@@ -6,6 +6,7 @@ open Microsoft.FSharp.Core.Printf
 open System.Reflection
 
 type System.Exception with
+    /// Extension method for formatting exception information
     member this.ToDetailedString = 
         let sb = StringBuilder()
         let delimeter = String.replicate 50 "*"

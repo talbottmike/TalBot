@@ -2,6 +2,8 @@
 
 open TalBot
 
+/// Agent for posting links to Jira messages. 
+/// Uses internal state to reduce chattiness by not reposting a link that has been recently posted.
 let jiraAgent (jira:Jira) slackUri:MailboxProcessor<Message.Root> =
     MailboxProcessor.Start(fun inbox ->
 

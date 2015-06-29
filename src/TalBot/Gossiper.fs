@@ -5,7 +5,7 @@ open FSharp.CloudAgent
 open TalBot
 
 let spread serviceBusWriteConnectionString incomingMessage =
-    // Post incoming message to service bus queue
+    /// Post incoming message to service bus queue
     let postToServiceQueue (incomingMessage:IncomingMessage) =
         let serviceBusWriteConnection = ServiceBusConnection serviceBusWriteConnectionString
         let cloudWriteConnection = WorkerCloudConnection(serviceBusWriteConnection, Queue "queue")

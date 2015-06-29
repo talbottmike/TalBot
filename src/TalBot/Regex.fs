@@ -2,7 +2,7 @@
 
 open System.Text.RegularExpressions
 
-// Get all matches for a regex pattern
+/// Get all matches for a regex pattern
 let getMatches pattern input =
     Regex.Matches(input,pattern,RegexOptions.IgnoreCase) 
     |> Seq.cast

@@ -7,7 +7,7 @@ open FSharp.CloudAgent
 
 type Slanderer(slackUri)=
 
-    // Listen for incoming message from the service bus queue and process using the provided agent
+    /// Listen for incoming message from the service bus queue and process using the provided agent
     member this.Slander serviceBusReadConnectionString =
         // Create an Agent on demand to load response plugins and process incoming messages.
         let createAgent agentId =

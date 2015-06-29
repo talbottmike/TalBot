@@ -6,7 +6,7 @@ open System
 open TalBot
 open TalBot.Extensions
 
-// Blank response can be used to ignore to an incoming message
+/// Blank response can be used to ignore to an incoming message
 let blankResponse = { Response.text = ""; username = ""; icon_emoji = "" }
 type MessageType = JsonProvider<"""{"type": "hello","subtype": "bot_message"}""">
 type BotMessage = JsonProvider<"""{"type": "message","subtype": "bot_message","ts": "1358877455.000010","text": "Pushing is the answer","bot_id": "BFOOBAR","username": "github","icons": {}}""">
@@ -134,11 +134,11 @@ let matchMessageType (message:string) =
 //    | "team_migration_started" -> Some TEAM_MIGRATION_STARTED
     | _ -> None
 
-// Serialize incoming message to Json
+/// Serialize incoming message to Json
 let serializeIncomingMessage incomingMessage = JsonConvert.SerializeObject(incomingMessage)
 
     
-// Create payload from message
+/// Create payload from message
 let buildPayload message =
     {
         channel= message.destination
@@ -153,12 +153,12 @@ let buildPayload message =
             | _ -> message.icon
     }
 
-// Create payload from message to post to debug channel      
+/// Create payload from message to post to debug channel      
 let buildDebugPayload message debugChannel =
     let b = buildPayload message
     { b with channel=debugChannel}
 
-// Run notification plugins to get messages
+/// Run notification plugins to get messages
 let getMessagesFromNotificationPlugins () =
     let plugins = PluginLoader.loadNotificationPlugins ()
 
@@ -177,7 +177,7 @@ let getMessagesFromNotificationPlugins () =
 
     pluginResults |> Seq.choose (fun x -> x) |> Seq.toList
 
-// Post only new messages
+/// Post only new messages
 let postNewMessages uri (sender,messages) = 
     let messageLog = MessageLog.Read sender
     let previousMessages = JsonConvert.DeserializeObject<OutgoingMessage list>(messageLog)
@@ -190,7 +190,7 @@ let postNewMessages uri (sender,messages) =
         let slack = Slack.create uri
         difference () |> List.map buildPayload  |> List.iter (fun x -> Slack.post x slack)
 
-// Save messages that were posted to the log
+/// Save messages that were posted to the log
 let saveMessagesToLog (sender,messages) =
     let serialized = JsonConvert.SerializeObject(messages)
     MessageLog.Save serialized sender

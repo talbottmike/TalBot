@@ -1,3 +1,6 @@
+#### 0.0.5-beta - June 29 2015
+* Updates to support use of slack websockets
+
 #### 0.0.4-beta - June 10 2015
 * Updates to use Azure service bus
 * Updates to Plugin interface

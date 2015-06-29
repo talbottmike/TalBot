@@ -6,10 +6,11 @@ open System.Collections.Generic
 open TalBot.Configuration
 open BotHelper
 
+/// Sample response plugin
 type TicketResponsePlugin() =
     interface IResponsePlugin with
+        /// Create a response with a link to the ticket referenced in the incoming message
         member x.Listen message: IEnumerable<OutgoingMessage> =    
-            // Create a response with a link to the ticket referenced in the incoming message
             let ticketResponse (incomingMessage:IncomingMessage) =   
                 let ticketRegex = "\w{2,10}-\d{1,5}" 
                 let ticketUriPrefix = "http://jira.com/browse/"

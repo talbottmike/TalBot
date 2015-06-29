@@ -6,7 +6,7 @@ open BotHelper
 
 type Bot(botConfiguration,slackConfiguration) = 
 
-    // Generates messages by loading and running provided plugins
+    /// Generates messages by loading and running provided plugins
     member this.Speak () =
         let notifications = Notifier.getNotifications ()
         let groupedNotifications = notifications |> List.groupBy (fun x -> x.sender)
@@ -18,12 +18,12 @@ type Bot(botConfiguration,slackConfiguration) =
 
         groupedNotifications |> List.iter postAndLog
                 
-    // Posts to queue for workers to process
+    /// Posts to queue for workers to process
     member this.Gossip (incomingMessage:IncomingMessage) =
             Gossiper.spread slackConfiguration.ServiceBusWriteConnectionString incomingMessage
             blankResponse
 
-    // Evaluates a suspicious incoming message and responds or passes it along with approval to process
+    /// Evaluates a suspicious incoming message and responds or passes it along with approval to process
     member this.Respond suspectIncomingMessage =
         match suspectIncomingMessage with
         | None -> blankResponse
@@ -34,8 +34,8 @@ type Bot(botConfiguration,slackConfiguration) =
         // Otherwise we'll come up with a response or talk about it behind your back by posting separately.
         | Some incomingMessage -> this.Gossip incomingMessage
 
-    // Safely logs an exception to the debug channel
-    // Swallows any exceptions that may occur if the log attempt fails
+    /// Safely logs an exception to the debug channel
+    /// Swallows any exceptions that may occur if the log attempt fails
     member this.AttemptToLog (exn:exn) =
         BotHelper.attemptToLog slackConfiguration.SlackUri slackConfiguration.DebugChannel exn
 

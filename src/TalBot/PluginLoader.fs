@@ -6,13 +6,13 @@ open System.Reflection
 open TalBot
 open TalBot.Extensions
 
-// Application directory
+/// Application directory
 let directoryPath = AppDomain.CurrentDomain.BaseDirectory
 
-// Path of plugins to load
+/// Path of plugins to load
 let pluginPath = directoryPath + "Plugins"
 
-// Gets instances of the implemented notification plugins from the assembly file
+/// Gets instances of the implemented notification plugins from the assembly file
 let getNotificationPlugins assemblyName =
         try
             printfn "checking assembly for plugins: %s" assemblyName
@@ -33,7 +33,7 @@ let getNotificationPlugins assemblyName =
             printfn "Error loading assembly from file %s with exception %s" assemblyName exn.ToDetailedString
             List.empty<INotificationPlugin>
 
-// Gets a collection of notification plugins
+/// Gets a collection of notification plugins
 let loadNotificationPlugins () =
     Directory.CreateDirectory(pluginPath) |> ignore
     let files = 
@@ -41,7 +41,7 @@ let loadNotificationPlugins () =
         |> Seq.map (fun x -> Path.GetFileNameWithoutExtension(x))
     Seq.collect getNotificationPlugins (files)
 
-// Gets instances of the implemented response plugins from the assembly file
+/// Gets instances of the implemented response plugins from the assembly file
 let getResponsePlugins assemblyName =
         try
             let assembly = Assembly.Load(assemblyString = assemblyName)
@@ -61,7 +61,7 @@ let getResponsePlugins assemblyName =
             printfn "Error loading assembly from file %s with exception %s" assemblyName exn.ToDetailedString
             List.empty<IResponsePlugin>
 
-// Gets a collection of response plugins
+/// Gets a collection of response plugins
 let loadResponsePlugins () =
     Directory.CreateDirectory(pluginPath) |> ignore
     let files = 

@@ -5,14 +5,14 @@ module Slack =
     open System
     open FSharp.Data
 
-    // Slack.T is the primary type for this module
+    /// Slack.T is the primary type for this module
     type T = {Uri:string;}
     
-    // constructor
+    /// constructor
     let create uri = 
         {T.Uri=uri;}
 
-    // Post payload to slack
+    /// Post payload to slack
     let post payload {T.Uri=uri;} =
         let content = JsonConvert.SerializeObject(payload)
         
