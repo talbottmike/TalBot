@@ -7,4 +7,5 @@ Microsoft.Owin
 Microsoft.Owin.Host.SystemWeb
 MSBuild.Extension.Pack
 Owin
+FSharp.Data
 FSharp.CloudAgent
