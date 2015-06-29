@@ -115,7 +115,7 @@ Target "CopyBinaries" (fun _ ->
 // Clean build results
 
 Target "Clean" (fun _ ->
-    CleanDirs ["bin"; "temp"]
+    CleanDirs ["bin"; "temp"; "deployment-package"]
 )
 
 Target "CleanDocs" (fun _ ->
@@ -191,6 +191,13 @@ Target "PublishNuget" (fun _ ->
             WorkingDir = "bin" })
 )
 
+// --------------------------------------------------------------------------------------
+// Generate deployment packages
+
+Target "PackageDeployments" (fun _ ->
+    Fake.FileHelper.CopyDir "deployment-package/TalBot.Agent" "bin/TalBot.Agent" (fun _ -> true)
+    Fake.FileHelper.CopyDir "deployment-package/TalBot.Agent/Plugins" "bin/TalBot.Plugins" (fun _ -> true)
+)
 
 // --------------------------------------------------------------------------------------
 // Generate the documentation
@@ -342,6 +349,7 @@ Target "All" DoNothing
   ==> "AssemblyInfo"
   ==> "Build"
   ==> "CopyBinaries"
+  ==> "PackageDeployments"
   ==> "RunTests"
   ==> "GenerateReferenceDocs"
   ==> "GenerateDocs"

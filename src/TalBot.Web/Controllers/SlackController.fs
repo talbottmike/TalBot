@@ -1,5 +1,6 @@
 namespace TalBot.Web.Controllers
 
+open System.Configuration
 open System.Web.Http
 open TalBot
 
@@ -35,5 +36,6 @@ type SlackController() =
                 triggerWord = slackHook.Trigger_word
             }
 
-        let response = Bot.respond suspiciousIncomingMessage
+        let bot = Bot(Configuration.botConfiguration(), Configuration.slackConfiguration ())
+        let response = bot.Respond suspiciousIncomingMessage
         this.Ok response

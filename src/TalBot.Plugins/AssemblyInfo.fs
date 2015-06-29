@@ -1,7 +1,7 @@
 ﻿namespace System
 open System.Reflection
 
-[<assembly: AssemblyTitleAttribute("TalBot.PluginsFSharp")>]
+[<assembly: AssemblyTitleAttribute("TalBot.Plugins")>]
 [<assembly: AssemblyProductAttribute("TalBot")>]
 [<assembly: AssemblyDescriptionAttribute("A bot for posting status messages to Slack and responding to Slack posts.")>]
 [<assembly: AssemblyVersionAttribute("0.0.4")>]

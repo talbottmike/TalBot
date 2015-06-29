@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>TalBot</RootNamespace>
     <AssemblyName>TalBot</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
     <Name>TalBot</Name>
     <TargetFrameworkProfile />
@@ -61,6 +61,7 @@
   <Import Project="..\..\.paket\paket.targets" />
   <ItemGroup>
     <None Include="Script.fsx" />
+    <None Include="BotDialog.fsx" />
     <None Include="paket.references" />
     <None Include="paket.template" />
     <Compile Include="Types.fs" />
@@ -69,8 +70,17 @@
     <Compile Include="Interfaces.fs" />
     <Compile Include="PluginLoader.fs" />
     <Compile Include="MessageLog.fs" />
+    <Compile Include="Slack.fs" />
+    <Compile Include="Jira.fs" />
+    <Compile Include="Regex.fs" />
     <Compile Include="BotHelper.fs" />
+    <Compile Include="Agents.fs" />
+    <Compile Include="Notifier.fs" />
+    <Compile Include="Gossiper.fs" />
+    <Compile Include="Slanderer.fs" />
+    <Compile Include="Listener.fs" />
     <Compile Include="Bot.fs" />
+    <None Include="ConfigScript.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

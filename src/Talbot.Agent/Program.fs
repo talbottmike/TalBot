@@ -12,6 +12,7 @@ open System.ServiceProcess
 open ServiceHelper
 open TalBot
 open TalBot.Extensions
+open System.Configuration
 
 let getLogger serviceName =
     // Configure logging
@@ -92,8 +93,14 @@ let main argv =
             match Console.KeyAvailable with
             | true -> Console.ReadKey() |> ignore
             | false -> ()
+        
+        // TODO I don't think this parsing of the setting is working correctly. Need to look at it.
+        let inDebug = 
+            match ConfigurationManager.AppSettings.Item("DebugOption") with
+            | "true" -> DebugOption.DebugMode
+            | _ -> DebugOption.NonDebugMode
 
-        match TalBot.Configuration.inDebug with
+        match inDebug with
         | DebugOption.NonDebugMode -> ()
         | DebugOption.DebugMode -> debugWait()
 
