@@ -21,6 +21,7 @@ let jiraAgent (jira:Jira) slackUri:MailboxProcessor<Message.Root> =
 
             jiraMatches 
             |> List.filter (fun x -> not <| List.contains x previousJiras)
+            |> Seq.distinct
             |> Seq.map (fun y -> jira.MakeTicketResponse y)
             |> Seq.choose (fun y -> y)
             |> Seq.map (fun y -> BotHelper.buildPayload {OutgoingMessage.destination=msg.Channel; sender="TalBot"; text= y; icon=":talbot:"})
