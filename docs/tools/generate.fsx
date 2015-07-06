@@ -141,6 +141,7 @@ copyFiles()
 #if HELP
 buildDocumentation()
 #endif
-#if REFERENCE
-buildReference()
-#endif
+// TODO Temporarily commented out building of reference documentation due to issue generating reference docs when using type providers.
+//#if REFERENCE
+//buildReference()
+//#endif

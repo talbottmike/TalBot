@@ -1,4 +1,4 @@
-#### 0.0.5-beta - June 29 2015
+#### 0.0.5-beta - July 6 2015
 * Updates to support use of slack websockets
 
 #### 0.0.4-beta - June 10 2015
